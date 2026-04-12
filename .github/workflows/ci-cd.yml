@@ -1,4 +1,4 @@
-name: CI/CD Monorepo
+name: CI Monorepo
 
 on:
   push:
@@ -108,52 +108,3 @@ jobs:
       - name: Run tests
         run: php artisan test
 
-  deploy:
-    name: Deploy (Render opcional)
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs:
-      - frontend
-      - backend
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-
-    steps:
-      - name: Check Render configuration
-        id: render_config
-        env:
-          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
-          RENDER_FRONTEND_SERVICE_ID: ${{ secrets.RENDER_FRONTEND_SERVICE_ID }}
-          RENDER_BACKEND_SERVICE_ID: ${{ secrets.RENDER_BACKEND_SERVICE_ID }}
-        run: |
-          if [[ -z "${RENDER_API_KEY}" || -z "${RENDER_FRONTEND_SERVICE_ID}" || -z "${RENDER_BACKEND_SERVICE_ID}" ]]; then
-            echo "enabled=false" >> "$GITHUB_OUTPUT"
-            echo "Render deploy skipped: missing Render secrets/service IDs."
-          else
-            echo "enabled=true" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Trigger frontend deploy
-        if: steps.render_config.outputs.enabled == 'true'
-        env:
-          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
-          RENDER_FRONTEND_SERVICE_ID: ${{ secrets.RENDER_FRONTEND_SERVICE_ID }}
-        run: |
-          curl --fail-with-body --show-error --request POST \
-            --url "https://api.render.com/v1/services/${RENDER_FRONTEND_SERVICE_ID}/deploys" \
-            --header "Authorization: Bearer ${RENDER_API_KEY}" \
-            --header "Accept: application/json" \
-            --header "Content-Type: application/json" \
-            --data '{}'
-
-      - name: Trigger backend deploy
-        if: steps.render_config.outputs.enabled == 'true'
-        env:
-          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
-          RENDER_BACKEND_SERVICE_ID: ${{ secrets.RENDER_BACKEND_SERVICE_ID }}
-        run: |
-          curl --fail-with-body --show-error --request POST \
-            --url "https://api.render.com/v1/services/${RENDER_BACKEND_SERVICE_ID}/deploys" \
-            --header "Authorization: Bearer ${RENDER_API_KEY}" \
-            --header "Accept: application/json" \
-            --header "Content-Type: application/json" \
-            --data '{}'
