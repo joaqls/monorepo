@@ -9,5 +9,5 @@ FROM node:20-alpine
 WORKDIR /app
 RUN npm install -g serve
 COPY --from=builder /app/dist/liga-deportiva-angular ./dist/liga-deportiva-angular
-EXPOSE 3000
-CMD ["serve", "-s", "dist/liga-deportiva-angular", "-l", "3000"]
+EXPOSE 8080
+CMD ["sh", "-c", "serve -s dist/liga-deportiva-angular -l ${PORT:-8080}"]
