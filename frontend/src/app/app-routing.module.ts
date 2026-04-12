@@ -22,7 +22,6 @@ const routes: Routes = [
   { path: 'equipos', component: EquiposComponent },
   { path: 'jugadores', component: JugadoresComponent },
   { path: 'clasificaciones', component: ClasificacionesComponent },
-  { path: 'arbitro', component: ArbitroComponent },
   { path: 'resultados', component: ResultadosComponent },
   { path: 'contacto', component: ContactoComponent },
   { path: 'login', component: LoginComponent },
