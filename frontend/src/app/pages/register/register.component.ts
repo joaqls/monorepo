@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -19,6 +20,9 @@ export class RegisterComponent {
   ) {}
 
   registrar() {
+    this.usuario = this.usuario.trim();
+    this.equipo = this.equipo.trim();
+
     if (!this.usuario || !this.password || !this.rol) {
       alert('Completa los campos obligatorios');
       return;
@@ -45,7 +49,35 @@ export class RegisterComponent {
         alert('Usuario registrado correctamente');
         this.router.navigate(['/login']);
       },
-      error: () => {
+      error: (err: HttpErrorResponse) => {
+        const apiMessage = err?.error?.message;
+        const fieldErrors = err?.error?.errors;
+
+        if (apiMessage) {
+          if (apiMessage.toLowerCase().includes('already been taken')) {
+            alert('Ese nombre de usuario ya existe. Prueba con otro distinto.');
+            return;
+          }
+
+          if (apiMessage.toLowerCase().includes('equipo')) {
+            alert('El equipo es obligatorio para los roles usuario y capitan.');
+            return;
+          }
+
+          alert(apiMessage);
+          return;
+        }
+
+        if (fieldErrors) {
+          const firstField = Object.keys(fieldErrors)[0];
+          const firstError = firstField ? fieldErrors[firstField]?.[0] : null;
+
+          if (firstError) {
+            alert(firstError);
+            return;
+          }
+        }
+
         alert('Error al registrar usuario');
       }
     });
