@@ -1,0 +1,66 @@
+name: Angular CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Run unit and integration tests (Jasmine/Karma)
+        run: npm run test -- --watch=false --browsers=ChromeHeadless
+
+  e2e:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Start Angular app
+        run: npm start -- --host 0.0.0.0 --port 4200 > /tmp/ng-serve.log 2>&1 &
+
+      - name: Wait for app to be ready
+        run: |
+          for i in {1..60}; do
+            if curl -sSf http://localhost:4200 > /dev/null; then
+              echo "App is ready"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "App did not start in time"
+          cat /tmp/ng-serve.log
+          exit 1
+
+      - name: Run Cypress E2E tests
+        run: npx cypress run
