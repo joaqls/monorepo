@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# v2 - force redeploy to pick up auth routes
 set -e
 
 if [[ -n "${DB_HOST}" && "${DB_HOST}" != "TU_HOST_REAL" ]]; then
