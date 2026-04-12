@@ -28,7 +28,7 @@ describe('AuthService', () => {
       expect(resp).toEqual(mockResp);
     });
 
-    const expectedUrl = (service as any).apiUrl; // apiUrl es privado en el servicio
+    const expectedUrl = (service as any).apiUrl + '/register';
 
     const req = httpMock.expectOne((req) => req.method === 'POST' && req.url === expectedUrl);
     expect(req.request.body).toEqual(mockUser);
