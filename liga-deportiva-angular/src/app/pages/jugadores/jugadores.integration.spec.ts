@@ -1,3 +1,5 @@
+/// <reference types="jasmine" />
+
 import { Component, Injectable, OnInit } from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { HttpClient } from '@angular/common/http';

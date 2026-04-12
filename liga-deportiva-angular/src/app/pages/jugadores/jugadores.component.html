@@ -1,6 +1,56 @@
 <section class="container my-5">
   <h2 class="text-center mb-4">Jugadores</h2>
 
+  <form class="card card-body shadow-sm mb-4" (ngSubmit)="guardarJugador()" data-testid="jugador-form">
+    <div class="row g-3 align-items-end">
+      <div class="col-md-4">
+        <label class="form-label" for="nombre">Nombre</label>
+        <input
+          id="nombre"
+          name="nombre"
+          type="text"
+          class="form-control"
+          [(ngModel)]="nuevoJugador.nombre"
+          data-testid="jugador-nombre"
+        >
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label" for="equipo">Equipo</label>
+        <input
+          id="equipo"
+          name="equipo"
+          type="text"
+          class="form-control"
+          [(ngModel)]="nuevoJugador.equipo"
+          data-testid="jugador-equipo"
+        >
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label" for="deporte">Deporte</label>
+        <input
+          id="deporte"
+          name="deporte"
+          type="text"
+          class="form-control"
+          [(ngModel)]="nuevoJugador.deporte"
+          data-testid="jugador-deporte"
+        >
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
+      <p *ngIf="errorMensaje" class="text-danger mb-0" data-testid="jugador-error">
+        {{ errorMensaje }}
+      </p>
+
+      <button type="submit" class="btn btn-primary ms-auto" data-testid="jugador-guardar">
+        Guardar
+      </button>
+    </div>
+  </form>
+
   <!-- Buscador -->
   <div class="mb-4 text-center">
     <input
@@ -23,8 +73,8 @@
       </thead>
 
       <tbody>
-        <tr *ngFor="let j of jugadoresFiltrados">
-          <td>{{ j.nombre }}</td>
+        <tr *ngFor="let j of jugadoresFiltrados" data-testid="jugador-row">
+          <td data-testid="jugador-row-nombre">{{ j.nombre }}</td>
           <td>{{ j.equipo }}</td>
           <td>{{ j.deporte }}</td>
         </tr>
