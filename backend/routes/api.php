@@ -4,8 +4,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ClubController;
 use App\Http\Controllers\Api\JugadorController;
 use App\Http\Controllers\Api\LigaController;
+use App\Http\Controllers\Api\AuthController;
 
 // Rutas públicas
+Route::post('auth/register', [AuthController::class, 'register']);
+Route::post('auth/login', [AuthController::class, 'login']);
+
 Route::get('clubs', [ClubController::class, 'index']);
 Route::get('clubs/{club}', [ClubController::class, 'show']);
 Route::get('jugadores', [JugadorController::class, 'index']);

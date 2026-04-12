@@ -1,64 +1,22 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor() {}
+  private apiUrl = 'https://monorepo-copy-production-6c9d.up.railway.app/api/auth';
 
-  private getUsuariosRegistrados(): any[] {
-    try {
-      const raw = localStorage.getItem('usuarios');
-      return raw ? JSON.parse(raw) : [];
-    } catch (e) {
-      return [];
-    }
-  }
-
-  private setUsuariosRegistrados(usuarios: any[]): void {
-    try {
-      localStorage.setItem('usuarios', JSON.stringify(usuarios));
-    } catch (e) {
-      // noop
-    }
-  }
-
-  private getUsuariosConDefault(): any[] {
-    const usuarios = this.getUsuariosRegistrados();
-    // Fallback mínimo para no bloquear el acceso inicial
-    if (!usuarios.some(u => u.usuario === 'admin')) {
-      usuarios.push({ usuario: 'admin', password: 'admin', rol: 'admin' });
-      this.setUsuariosRegistrados(usuarios);
-    }
-    return usuarios;
-  }
+  constructor(private http: HttpClient) {}
 
   registrarUsuario(usuario: any): Observable<any> {
-    const usuarios = this.getUsuariosConDefault();
-    const existe = usuarios.some(u => u.usuario === usuario.usuario);
-
-    if (existe) {
-      return throwError(() => new Error('Usuario ya existe'));
-    }
-
-    usuarios.push(usuario);
-    this.setUsuariosRegistrados(usuarios);
-    return of({ ok: true });
+    return this.http.post(this.apiUrl + '/register', usuario);
   }
 
   login(usuario: string, password: string): Observable<any> {
-    const usuarios = this.getUsuariosConDefault();
-    const encontrado = usuarios.find(
-      u => u.usuario === usuario && u.password === password
-    );
-
-    if (!encontrado) {
-      return throwError(() => new Error('Credenciales inválidas'));
-    }
-
-    return of(encontrado);
+    return this.http.post(this.apiUrl + '/login', { usuario, password });
   }
 
   setUsuario(usuario: any): void {
