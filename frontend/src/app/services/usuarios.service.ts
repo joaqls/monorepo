@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class UsuariosService {
 
-  private apiUrl = 'https://liga-deportiva-angular.onrender.com/api/usuarios';
+  private apiUrl = 'https://monorepo-copy-production-6c9d.up.railway.app/api/usuarios';
 
   constructor(private http: HttpClient) {}
 

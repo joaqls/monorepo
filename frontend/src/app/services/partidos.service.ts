@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class PartidosService {
 
-  private apiUrl = 'https://liga-deportiva-angular.onrender.com/api/partidos';
+  private apiUrl = 'https://monorepo-copy-production-6c9d.up.railway.app/api/partidos';
 
   constructor(private http: HttpClient) {}
 
