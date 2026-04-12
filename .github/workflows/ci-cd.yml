@@ -1,4 +1,4 @@
-name: CI Monorepo
+name: CI/CD Monorepo (Railway)
 
 on:
   push:
@@ -101,4 +101,48 @@ jobs:
 
       - name: Run tests
         run: php artisan test
+
+  railway-smoke:
+    name: Smoke Tests (Railway)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs:
+      - frontend
+      - backend
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Check Railway URLs configuration
+        id: railway_config
+        env:
+          RAILWAY_BACKEND_URL: ${{ secrets.RAILWAY_BACKEND_URL }}
+          RAILWAY_FRONTEND_URL: ${{ secrets.RAILWAY_FRONTEND_URL }}
+        run: |
+          if [[ -z "${RAILWAY_BACKEND_URL}" || -z "${RAILWAY_FRONTEND_URL}" ]]; then
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "Railway smoke tests skipped: missing RAILWAY_BACKEND_URL and/or RAILWAY_FRONTEND_URL secrets."
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Test backend health endpoint
+        if: steps.railway_config.outputs.enabled == 'true'
+        env:
+          RAILWAY_BACKEND_URL: ${{ secrets.RAILWAY_BACKEND_URL }}
+        run: |
+          curl --fail-with-body --show-error --silent "${RAILWAY_BACKEND_URL%/}/up" > /dev/null
+
+      - name: Test backend API endpoint
+        if: steps.railway_config.outputs.enabled == 'true'
+        env:
+          RAILWAY_BACKEND_URL: ${{ secrets.RAILWAY_BACKEND_URL }}
+        run: |
+          curl --fail-with-body --show-error --silent "${RAILWAY_BACKEND_URL%/}/api/ligas" > /dev/null
+
+      - name: Test frontend endpoint
+        if: steps.railway_config.outputs.enabled == 'true'
+        env:
+          RAILWAY_FRONTEND_URL: ${{ secrets.RAILWAY_FRONTEND_URL }}
+        run: |
+          curl --fail-with-body --show-error --silent "${RAILWAY_FRONTEND_URL%/}/" > /dev/null
 
