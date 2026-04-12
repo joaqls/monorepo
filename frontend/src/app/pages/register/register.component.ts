@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { UsuariosService } from '../../services/usuarios.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -14,7 +14,7 @@ export class RegisterComponent {
   equipo = '';
 
   constructor(
-    private usuariosService: UsuariosService,
+    private authService: AuthService,
     private router: Router
   ) {}
 
@@ -40,7 +40,7 @@ export class RegisterComponent {
       nuevoUsuario.equipo = this.equipo;
     }
 
-    this.usuariosService.registrarUsuario(nuevoUsuario).subscribe({
+    this.authService.registrarUsuario(nuevoUsuario).subscribe({
       next: () => {
         alert('Usuario registrado correctamente');
         this.router.navigate(['/login']);

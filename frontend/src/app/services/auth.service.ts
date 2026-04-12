@@ -1,22 +1,64 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private apiUrl = 'https://monorepo-copy-production-6c9d.up.railway.app/api/';
+  constructor() {}
 
-  constructor(private http: HttpClient) {}
+  private getUsuariosRegistrados(): any[] {
+    try {
+      const raw = localStorage.getItem('usuarios');
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) {
+      return [];
+    }
+  }
 
-  registrarUsuario(usuario: any) {
-    return this.http.post(this.apiUrl, usuario);
+  private setUsuariosRegistrados(usuarios: any[]): void {
+    try {
+      localStorage.setItem('usuarios', JSON.stringify(usuarios));
+    } catch (e) {
+      // noop
+    }
+  }
+
+  private getUsuariosConDefault(): any[] {
+    const usuarios = this.getUsuariosRegistrados();
+    // Fallback mínimo para no bloquear el acceso inicial
+    if (!usuarios.some(u => u.usuario === 'admin')) {
+      usuarios.push({ usuario: 'admin', password: 'admin', rol: 'admin' });
+      this.setUsuariosRegistrados(usuarios);
+    }
+    return usuarios;
+  }
+
+  registrarUsuario(usuario: any): Observable<any> {
+    const usuarios = this.getUsuariosConDefault();
+    const existe = usuarios.some(u => u.usuario === usuario.usuario);
+
+    if (existe) {
+      return throwError(() => new Error('Usuario ya existe'));
+    }
+
+    usuarios.push(usuario);
+    this.setUsuariosRegistrados(usuarios);
+    return of({ ok: true });
   }
 
   login(usuario: string, password: string): Observable<any> {
-    return this.http.post(this.apiUrl + 'auth/login', { usuario, password });
+    const usuarios = this.getUsuariosConDefault();
+    const encontrado = usuarios.find(
+      u => u.usuario === usuario && u.password === password
+    );
+
+    if (!encontrado) {
+      return throwError(() => new Error('Credenciales inválidas'));
+    }
+
+    return of(encontrado);
   }
 
   setUsuario(usuario: any): void {
