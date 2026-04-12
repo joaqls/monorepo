@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { UsuarioComponent } from './usuario.component';
 
@@ -8,6 +10,7 @@ describe('UsuarioComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule, RouterTestingModule],
       declarations: [UsuarioComponent]
     });
     fixture = TestBed.createComponent(UsuarioComponent);
@@ -15,7 +18,7 @@ describe('UsuarioComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crearse', () => {
     expect(component).toBeTruthy();
   });
 });

@@ -1,4 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { FormsModule } from '@angular/forms';
 
 import { AdminComponent } from './admin.component';
 
@@ -8,6 +11,7 @@ describe('AdminComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule, RouterTestingModule, FormsModule],
       declarations: [AdminComponent]
     });
     fixture = TestBed.createComponent(AdminComponent);
@@ -15,7 +19,7 @@ describe('AdminComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crearse', () => {
     expect(component).toBeTruthy();
   });
 });

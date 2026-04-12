@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { ArbitroComponent } from './arbitro.component';
 
@@ -8,6 +10,7 @@ describe('ArbitroComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule, RouterTestingModule],
       declarations: [ArbitroComponent]
     });
     fixture = TestBed.createComponent(ArbitroComponent);
@@ -15,7 +18,7 @@ describe('ArbitroComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crearse', () => {
     expect(component).toBeTruthy();
   });
 });

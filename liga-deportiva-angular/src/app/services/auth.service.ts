@@ -7,36 +7,40 @@ import { Observable } from 'rxjs';
 })
 export class AuthService {
 
-  private usuarioActual: any = null;
-  private apiUrl = 'https://liga-deportiva-angular.onrender.com/api';
+  private apiUrl = 'https://liga-deportiva-angular.onrender.com/api/';
 
-  constructor(private http: HttpClient) {
-    // 🔑 Recuperar sesión si existe
-    const usuarioGuardado = localStorage.getItem('usuario');
-    if (usuarioGuardado) {
-      this.usuarioActual = JSON.parse(usuarioGuardado);
-    }
+  constructor(private http: HttpClient) {}
+
+  registrarUsuario(usuario: any) {
+    return this.http.post(this.apiUrl, usuario);
   }
 
   login(usuario: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, { usuario, password });
+    return this.http.post(this.apiUrl + 'auth/login', { usuario, password });
   }
 
-  setUsuario(usuario: any) {
-    this.usuarioActual = usuario;
-    localStorage.setItem('usuario', JSON.stringify(usuario));
+  setUsuario(usuario: any): void {
+    try {
+      localStorage.setItem('usuario', JSON.stringify(usuario));
+    } catch (e) {
+      // noop
+    }
   }
 
-  getUsuario() {
-    return this.usuarioActual;
+  getUsuario(): any {
+    try {
+      const s = localStorage.getItem('usuario');
+      return s ? JSON.parse(s) : null;
+    } catch (e) {
+      return null;
+    }
   }
 
-  isLogged(): boolean {
-    return this.usuarioActual !== null;
-  }
-
-  logout() {
-    this.usuarioActual = null;
-    localStorage.removeItem('usuario');
+  logout(): void {
+    try {
+      localStorage.removeItem('usuario');
+    } catch (e) {
+      // noop
+    }
   }
 }

@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { ClasificacionesComponent } from './clasificaciones.component';
 
@@ -8,6 +10,7 @@ describe('ClasificacionesComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [FormsModule, RouterTestingModule],
       declarations: [ClasificacionesComponent]
     });
     fixture = TestBed.createComponent(ClasificacionesComponent);
@@ -15,7 +18,7 @@ describe('ClasificacionesComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crearse', () => {
     expect(component).toBeTruthy();
   });
 });

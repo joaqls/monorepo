@@ -1,5 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { AuthGuard } from './auth.guard';
 
 describe('AuthGuard', () => {
@@ -7,6 +9,7 @@ describe('AuthGuard', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule, RouterTestingModule],
       providers: [
         AuthGuard,
         { provide: Router, useValue: { navigate: jasmine.createSpy('navigate') } }
@@ -16,7 +19,7 @@ describe('AuthGuard', () => {
     guard = TestBed.inject(AuthGuard);
   });
 
-  it('should be created', () => {
+  it('debe ser creado', () => {
     expect(guard).toBeTruthy();
   });
 });
