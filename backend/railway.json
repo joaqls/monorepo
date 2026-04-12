@@ -20,10 +20,7 @@
     ]
   },
   "deploy": {
-    "preDeployCommand": [
-      "chmod +x ./railway/init-app.sh",
-      "./railway/init-app.sh"
-    ],
+    "preDeployCommand": "chmod +x ./railway/init-app.sh && ./railway/init-app.sh",
     "healthcheckPath": "/",
     "healthcheckTimeout": 300,
     "restartPolicyType": "ON_FAILURE",
