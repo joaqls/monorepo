@@ -1,0 +1,41 @@
+<section class="container my-5">
+  <h2 class="text-center mb-4">Resultados</h2>
+
+  <div class="mb-4 text-center">
+    <select
+      class="form-select w-auto d-inline-block"
+      [(ngModel)]="filtroDeporte"
+      name="filtroDeporte"
+    >
+      <option value="todos">Todos los deportes</option>
+      <option value="futbol">Fútbol</option>
+      <option value="baloncesto">Baloncesto</option>
+      <option value="voleibol">Voleibol</option>
+      <option value="tenis">Tenis</option>
+    </select>
+
+    <!-- DEBUG (puedes borrarlo luego) -->
+    <p class="mt-2 text-muted">Filtro actual: {{ filtroDeporte }}</p>
+  </div>
+
+  <table class="table table-striped text-center">
+    <thead class="table-dark">
+      <tr>
+        <th>Deporte</th>
+        <th>Local</th>
+        <th>Resultado</th>
+        <th>Visitante</th>
+        <th>Fecha</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let r of resultadosFiltrados">
+        <td>{{ r.deporte | titlecase }}</td>
+        <td>{{ r.local }}</td>
+        <td>{{ r.resultado }}</td>
+        <td>{{ r.visitante }}</td>
+        <td>{{ r.fecha }}</td>
+      </tr>
+    </tbody>
+  </table>
+</section>

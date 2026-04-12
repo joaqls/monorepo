@@ -1,0 +1,38 @@
+<h2>Partidos de tu equipo</h2>
+
+<p>
+  Equipo: <strong>{{ equipo }}</strong>
+</p>
+
+<div *ngFor="let p of partidos" class="mb-3 border p-3 rounded">
+
+  <p>
+    {{ p.equipoLocal }} vs {{ p.equipoVisitante }} —
+    <strong>Estado:</strong> {{ p.estado }}
+  </p>
+
+  <!-- SOLO si el partido ya ha pasado y está pendiente -->
+  <div *ngIf="p.estado === 'pendiente' && partidoFinalizado(p)">
+
+    <input
+      class="form-control mb-2"
+      placeholder="Ej: 2-1"
+      [(ngModel)]="resultado">
+
+    <button
+      class="btn btn-primary"
+      (click)="enviarResultado(p)">
+      Enviar resultado
+    </button>
+
+  </div>
+
+  <div *ngIf="p.estado === 'pendiente' && !partidoFinalizado(p)">
+    <em>El partido aún no se ha jugado</em>
+  </div>
+
+  <div *ngIf="p.estado !== 'pendiente'">
+    <em>No se puede modificar este partido</em>
+  </div>
+
+</div>

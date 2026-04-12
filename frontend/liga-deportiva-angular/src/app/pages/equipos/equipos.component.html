@@ -1,0 +1,27 @@
+<section class="container my-5">
+  <h2 class="text-center mb-4">Equipos</h2>
+
+  <div class="mb-4 text-center">
+    <select class="form-select w-auto d-inline-block"
+            [(ngModel)]="filtroDeporte">
+      <option value="todos">Todos</option>
+      <option value="futbol">Fútbol</option>
+      <option value="baloncesto">Baloncesto</option>
+      <option value="voleibol">Voleibol</option>
+      <option value="tenis">Tenis</option>
+    </select>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-12 col-md-6 col-lg-3"
+         *ngFor="let e of equiposFiltrados">
+      <div class="card h-100">
+        <img [src]="e.imagen" class="card-img-top" [alt]="e.nombre">
+        <div class="card-body text-center">
+          <h5 class="card-title">{{ e.nombre }}</h5>
+          <p class="card-text">{{ e.descripcion }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,80 @@
+<div class="row justify-content-center mt-5">
+  <div class="col-md-8 col-lg-6">
+
+    <div class="card shadow">
+      <div class="card-body">
+
+        <h3 class="text-center mb-4">Registro de usuario</h3>
+
+        <form (ngSubmit)="registrar()">
+
+          <div class="mb-3">
+            <label for="usuario" class="form-label">Usuario</label>
+            <input
+              type="text"
+              id="usuario"
+              class="form-control"
+              [(ngModel)]="usuario"
+              name="usuario"
+              required
+            >
+          </div>
+
+          <div class="mb-3">
+            <label for="password" class="form-label">Contraseña</label>
+            <input
+              type="password"
+              id="password"
+              class="form-control"
+              [(ngModel)]="password"
+              name="password"
+              required
+            >
+          </div>
+
+          <div class="mb-3">
+            <label for="rol" class="form-label">Tipo de usuario</label>
+            <select
+              id="rol"
+              class="form-select"
+              [(ngModel)]="rol"
+              name="rol"
+              required
+            >
+              <option value="">Selecciona un rol</option>
+              <option value="admin">Administrador</option>
+              <option value="usuario">Usuario</option>
+              <option value="capitan">Capitán</option>
+              <option value="arbitro">Árbitro</option>
+            </select>
+          </div>
+
+          <!-- SOLO PARA USUARIO Y CAPITÁN -->
+          <div
+            class="mb-3"
+            *ngIf="rol === 'usuario' || rol === 'capitan'"
+          >
+            <label for="equipo" class="form-label">Equipo</label>
+            <input
+              type="text"
+              id="equipo"
+              class="form-control"
+              [(ngModel)]="equipo"
+              name="equipo"
+              required
+            >
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="btn btn-success">
+              Registrarse
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+
+  </div>
+</div>

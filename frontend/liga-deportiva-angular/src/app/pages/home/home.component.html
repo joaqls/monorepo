@@ -1,0 +1,234 @@
+<!-- ================= CONTENIDO PRINCIPAL ================= -->
+<main>
+
+  <!-- Hero -->
+  <div class="bg-primary text-white text-center p-5">
+    <h1>Liga Deportiva</h1>
+    <p>¡Sigue los equipos y resultados!</p>
+    <a href="#competiciones" class="btn btn-light">Ver Competiciones</a>
+  </div>
+
+  <!-- ================= SECCIÓN: Noticias ================= -->
+<!-- ================= SECCIÓN: Noticias ================= -->
+<section id="noticias" class="container my-5">
+  <h2 class="text-center mb-4">Noticias recientes</h2>
+
+  <div id="carouselNoticias" class="carousel slide" data-bs-ride="carousel">
+
+    <!-- Indicadores (círculos) -->
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#carouselNoticias" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Noticia 1"></button>
+      <button type="button" data-bs-target="#carouselNoticias" data-bs-slide-to="1" aria-label="Noticia 2"></button>
+    </div>
+
+    <!-- Contenedor de las diapositivas -->
+    <div class="carousel-inner">
+
+      <!-- Noticia 1 -->
+      <div class="carousel-item active" data-bs-toggle="modal" data-bs-target="#modalNoticia1" style="cursor:pointer;">
+        <img src="assets/img/foto1.jpg" class="d-block w-100" alt="Noticia 1">
+        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded">
+          <h5>Campeones 2025</h5>
+          <p>El equipo de fútbol A gana el torneo interno.</p>
+        </div>
+      </div>
+
+      <!-- Noticia 2 -->
+      <div class="carousel-item" data-bs-toggle="modal" data-bs-target="#modalNoticia2" style="cursor:pointer;">
+        <img src="assets/img/foto2.jpeg" class="d-block w-100" alt="Noticia 2">
+        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded">
+          <h5>Nueva liga de voleibol</h5>
+          <p>Inscripciones abiertas hasta el 30 de octubre.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controles (flechas) -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselNoticias" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+      <span class="visually-hidden">Anterior</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselNoticias" data-bs-slide="next">
+      <span class="carousel-control-next-icon"></span>
+      <span class="visually-hidden">Siguiente</span>
+    </button>
+
+    <!-- Contador de diapositivas -->
+    <div id="contadorCarousel" class="position-absolute top-0 end-0 m-3 px-3 py-1 bg-dark bg-opacity-75 text-white rounded">
+      1/2
+    </div>
+  </div>
+</section>
+
+
+<!-- ================= SECCIÓN: Competiciones ================= -->
+<section id="competiciones" class="container my-5">
+  <h2 class="text-center mb-4">Competiciones</h2>
+
+  <div class="row g-4">
+    <!-- Fútbol -->
+    <div class="col-12 col-md-6 col-lg-3">
+      <div class="card h-100 shadow-sm">
+        <img src="assets/img/futbol.jpg.avif" class="card-img-top" alt="Fútbol">
+        <div class="card-body text-center">
+          <h5 class="card-title">Fútbol</h5>
+          <p class="card-text">Liga interna del instituto.</p>
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalFutbol">Ver más</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Baloncesto -->
+    <div class="col-12 col-md-6 col-lg-3">
+      <div class="card h-100 shadow-sm">
+        <img src="assets/img/baloncesto.jpeg" class="card-img-top" alt="Baloncesto">
+        <div class="card-body text-center">
+          <h5 class="card-title">Baloncesto</h5>
+          <p class="card-text">Competición mixta del instituto.</p>
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalBaloncesto">Ver más</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Voleibol -->
+    <div class="col-12 col-md-6 col-lg-3">
+      <div class="card h-100 shadow-sm">
+        <img src="assets/img/voleibol.jpg.avif" class="card-img-top" alt="Voleibol">
+        <div class="card-body text-center">
+          <h5 class="card-title">Voleibol</h5>
+          <p class="card-text">Competición abierta a todo el alumnado.</p>
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalVoleibol">Ver más</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tenis -->
+    <div class="col-12 col-md-6 col-lg-3">
+      <div class="card h-100 shadow-sm">
+        <img src="assets/img/tenis.jpg.avif" class="card-img-top" alt="Tenis">
+        <div class="card-body text-center">
+          <h5 class="card-title">Tenis</h5>
+          <p class="card-text">Torneo individual y por parejas.</p>
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTenis">Ver más</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MODALES DE COMPETICIONES ================= -->
+
+<!-- Modal Fútbol -->
+<div class="modal fade" id="modalFutbol" tabindex="-1" aria-labelledby="modalFutbolLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalFutbolLabel">Competición de Fútbol ⚽</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+          Nullam euismod, nisl eget consectetur sagittis, nisl nunc consectetur nisi, 
+          eget consequat nunc nunc vel nisl. Curabitur vel lacus in quam tempor hendrerit. 
+          La liga interna de fútbol se jugará durante todo el semestre.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Baloncesto -->
+<div class="modal fade" id="modalBaloncesto" tabindex="-1" aria-labelledby="modalBaloncestoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalBaloncestoLabel">Competición de Baloncesto 🏀</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+          Quisque a tincidunt metus. Suspendisse potenti. 
+          La liga de baloncesto contará con partidos mixtos y un formato de eliminatorias.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Voleibol -->
+<div class="modal fade" id="modalVoleibol" tabindex="-1" aria-labelledby="modalVoleibolLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalVoleibolLabel">Competición de Voleibol 🏐</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+          Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; 
+          Vivamus euismod arcu sed urna ullamcorper, at tincidunt risus laoreet. 
+          Inscripciones abiertas hasta el 15 de diciembre.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Tenis -->
+<div class="modal fade" id="modalTenis" tabindex="-1" aria-labelledby="modalTenisLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTenisLabel">Competición de Tenis 🎾</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+          Mauris placerat, magna a gravida feugiat, ligula ligula convallis purus, 
+          vel viverra nisi justo non mi. Torneo con formato de eliminatoria directa y final a tres sets.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- ================= MODALES DE NOTICIAS ================= -->
+<!-- Modal Noticia 1 -->
+<div class="modal fade" id="modalNoticia1" tabindex="-1" aria-labelledby="modalNoticia1Label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalNoticia1Label">Campeones 2025 🏆</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        ¡El equipo de Fútbol A gana el torneo del instituto 2025 con una actuación impresionante! 🎉  
+        Gracias al esfuerzo conjunto y la pasión por el deporte, lograron la victoria final frente a sus rivales más duros.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Noticia 2 -->
+<div class="modal fade" id="modalNoticia2" tabindex="-1" aria-labelledby="modalNoticia2Label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalNoticia2Label">Nueva liga de voleibol 🏐</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        Se abre la inscripción para la nueva liga de voleibol del instituto.  
+        ¡Anímate a participar y demuestra tus habilidades en la cancha!  
+        <br><br>
+        <strong>Fecha límite:</strong> 30 de octubre.
+      </div>
+    </div>
+  </div>
+</div>

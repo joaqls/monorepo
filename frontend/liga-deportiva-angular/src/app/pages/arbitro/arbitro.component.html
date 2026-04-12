@@ -1,0 +1,17 @@
+<h2>Partidos asignados</h2>
+
+<p *ngIf="arbitro">
+  Árbitro: <strong>{{ arbitro }}</strong>
+</p>
+
+<ul *ngIf="partidos.length > 0; else sinPartidos">
+  <li *ngFor="let p of partidos">
+    {{ p.equipoLocal }} vs {{ p.equipoVisitante }}
+    —
+    {{ p.fecha | date:'dd/MM/yyyy' }}
+  </li>
+</ul>
+
+<ng-template #sinPartidos>
+  <p>No tienes partidos asignados.</p>
+</ng-template>

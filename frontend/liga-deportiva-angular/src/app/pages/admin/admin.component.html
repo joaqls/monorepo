@@ -1,0 +1,57 @@
+<h1>Panel de Administración</h1>
+
+<hr>
+
+<h2>Crear partido</h2>
+
+<div class="mb-3">
+  <input class="form-control mb-2" placeholder="Equipo local" [(ngModel)]="equipoLocal">
+  <input class="form-control mb-2" placeholder="Equipo visitante" [(ngModel)]="equipoVisitante">
+  <input class="form-control mb-2" placeholder="Deporte" [(ngModel)]="deporte">
+  <input class="form-control mb-2" type="date" [(ngModel)]="fecha">
+  <input class="form-control mb-2" placeholder="Árbitro" [(ngModel)]="arbitro">
+  <input class="form-control mb-2" placeholder="Ubicación" [(ngModel)]="ubicacion">
+
+  <button class="btn btn-success" (click)="crearPartido()">
+    Crear partido
+  </button>
+</div>
+
+<hr>
+
+<h2>Todos los partidos</h2>
+
+<div *ngFor="let p of partidos" class="mb-2">
+  {{ p.equipoLocal }} vs {{ p.equipoVisitante }} —
+  {{ p.fecha | date:'dd/MM/yyyy' }} —
+  <strong>{{ p.estado }}</strong>
+</div>
+
+<hr>
+
+<h2>Partidos en revisión</h2>
+
+<div *ngFor="let p of partidosRevision" class="border p-2 mb-3">
+  <p>
+    {{ p.equipoLocal }} vs {{ p.equipoVisitante }} <br>
+    Capitanes:
+    {{ p.resultadoCapitanLocal }} /
+    {{ p.resultadoCapitanVisitante }}
+  </p>
+
+  <input
+    class="form-control mb-2"
+    type="number"
+    placeholder="Resultado local"
+    [(ngModel)]="resLocal">
+
+  <input
+    class="form-control mb-2"
+    type="number"
+    placeholder="Resultado visitante"
+    [(ngModel)]="resVisitante">
+
+  <button class="btn btn-primary" (click)="confirmar(p)">
+    Confirmar resultado
+  </button>
+</div>
