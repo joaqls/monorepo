@@ -3,6 +3,7 @@
 .env
 .env.backup
 .env.production
+.env.testing
 .phpactor.json
 .phpunit.result.cache
 /.fleet
@@ -16,6 +17,7 @@
 /public/build
 /public/hot
 /public/storage
+/coverage
 /storage/*.key
 /storage/pail
 /vendor

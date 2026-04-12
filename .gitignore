@@ -1,0 +1,21 @@
+# macOS / OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log
+
+# Root env files
+.env
+.env.*
+!.env.example
+
+# Monorepo local artifacts
+coverage/
+dist/
+.tmp/
