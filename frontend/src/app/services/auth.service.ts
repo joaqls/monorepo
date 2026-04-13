@@ -137,9 +137,7 @@ export class AuthService {
 
   private handleHttpError(error: unknown, fallbackMessage: string): Observable<never> {
     if (error instanceof HttpErrorResponse) {
-      const apiMessage = typeof error.error?.message === 'string' ? error.error.message : '';
-      const message = apiMessage || fallbackMessage;
-      return throwError(() => new Error(message));
+      return throwError(() => error);
     }
 
     if (error instanceof Error) {

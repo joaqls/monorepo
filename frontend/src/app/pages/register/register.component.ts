@@ -49,26 +49,22 @@ export class RegisterComponent {
         alert('Usuario registrado correctamente');
         this.router.navigate(['/login']);
       },
-      error: (err: HttpErrorResponse) => {
-        const apiMessage = err?.error?.message;
-        const fieldErrors = err?.error?.errors;
+      error: (err: HttpErrorResponse | Error) => {
+        const apiMessage = err instanceof HttpErrorResponse ? err.error?.message : null;
+        const fieldErrors = err instanceof HttpErrorResponse ? err.error?.errors : null;
 
-        if (apiMessage) {
-          if (apiMessage.toLowerCase().includes('already been taken')) {
+        if (fieldErrors) {
+          const allErrors = Object.values(fieldErrors).flat() as string[];
+          const duplicate = allErrors.find((e: string) =>
+            e.toLowerCase().includes('already been taken') ||
+            e.toLowerCase().includes('ya ha sido')
+          );
+
+          if (duplicate) {
             alert('Ese nombre de usuario ya existe. Prueba con otro distinto.');
             return;
           }
 
-          if (apiMessage.toLowerCase().includes('equipo')) {
-            alert('El equipo es obligatorio para los roles usuario y capitan.');
-            return;
-          }
-
-          alert(apiMessage);
-          return;
-        }
-
-        if (fieldErrors) {
           const firstField = Object.keys(fieldErrors)[0];
           const firstError = firstField ? fieldErrors[firstField]?.[0] : null;
 
@@ -76,6 +72,16 @@ export class RegisterComponent {
             alert(firstError);
             return;
           }
+        }
+
+        if (apiMessage) {
+          if (apiMessage.toLowerCase().includes('equipo')) {
+            alert('El equipo es obligatorio para los roles usuario y capitan.');
+            return;
+          }
+
+          alert(apiMessage);
+          return;
         }
 
         alert('Error al registrar usuario');
