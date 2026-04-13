@@ -54,8 +54,10 @@ export class RegisterComponent {
         const fieldErrors = err instanceof HttpErrorResponse ? err.error?.errors : null;
 
         if (fieldErrors) {
-          const allErrors = Object.values(fieldErrors).flat() as string[];
-          const duplicate = allErrors.find((e: string) =>
+          const allErrors = Object.values(fieldErrors).flat().filter(
+            (e): e is string => typeof e === 'string'
+          );
+          const duplicate = allErrors.find(e =>
             e.toLowerCase().includes('already been taken') ||
             e.toLowerCase().includes('ya ha sido')
           );
