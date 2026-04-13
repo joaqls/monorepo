@@ -121,6 +121,8 @@ export class AuthService {
   }
 
   private validateAuthPayload(payload: any): any {
+    console.log('[AUTH_SERVICE] validateAuthPayload - payload:', payload);
+    
     const isValid =
       payload &&
       typeof payload === 'object' &&
@@ -129,6 +131,14 @@ export class AuthService {
       typeof payload.rol === 'string';
 
     if (!isValid) {
+      console.error('[AUTH_SERVICE] Validación falló - payload inválido:', {
+        hasPayload: !!payload,
+        isObject: typeof payload === 'object',
+        hasId: typeof payload?.id !== 'undefined',
+        usuarioType: typeof payload?.usuario,
+        rolType: typeof payload?.rol,
+        contents: payload
+      });
       throw new Error('Formato de respuesta de autenticación inválido');
     }
 

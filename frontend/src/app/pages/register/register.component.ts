@@ -50,9 +50,18 @@ export class RegisterComponent {
         this.router.navigate(['/login']);
       },
       error: (err: HttpErrorResponse | Error) => {
+        console.error('[REGISTRO ERROR]', err);
         const apiMessage = err instanceof HttpErrorResponse ? err.error?.message : null;
         const fieldErrors = err instanceof HttpErrorResponse ? err.error?.errors : null;
         const plainMessage = err instanceof Error ? err.message : null;
+
+        console.log('[REGISTRO DEBUG]', {
+          isHttpError: err instanceof HttpErrorResponse,
+          status: err instanceof HttpErrorResponse ? err.status : 'N/A',
+          apiMessage,
+          fieldErrors,
+          plainMessage
+        });
 
         if (fieldErrors) {
           const allErrors = Object.values(fieldErrors).flat().filter(
