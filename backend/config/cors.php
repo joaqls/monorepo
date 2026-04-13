@@ -22,9 +22,8 @@ return [
         'http://127.0.0.1:4200',
         'http://127.0.0.1:3000',
         'http://127.0.0.1:8000',
-        // Production domains - agregar según sea necesario
-        // 'https://example.com',
-        // 'https://app.example.com',
+        // Production domains
+        'https://monorepo-copy-production-6c9d.up.railway.app',
     ],
 
     'allowed_origins_patterns' => [

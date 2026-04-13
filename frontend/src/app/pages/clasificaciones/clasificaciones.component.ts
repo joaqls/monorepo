@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-clasificaciones',
   templateUrl: './clasificaciones.component.html',
-  styleUrls: ['./clasificaciones.component.css']
+  styles: []
 })
 export class ClasificacionesComponent {
 

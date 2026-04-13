@@ -31,7 +31,13 @@ class LigaController extends Controller
 
     public function update(Request $request, Liga $liga)
     {
-        $liga->update($request->all());
+        $request->validate([
+            'nombre'    => 'sometimes|string|max:100',
+            'deporte'   => 'sometimes|string|max:50',
+            'temporada' => 'sometimes|string|max:20',
+        ]);
+
+        $liga->update($request->only(['nombre', 'deporte', 'temporada']));
         return $liga;
     }
 

@@ -9,7 +9,7 @@ interface Jugador {
 @Component({
   selector: 'app-jugadores',
   templateUrl: './jugadores.component.html',
-  styleUrls: ['./jugadores.component.css']
+  styles: []
 })
 export class JugadoresComponent {
 
