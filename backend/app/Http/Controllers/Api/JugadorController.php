@@ -32,7 +32,14 @@ class JugadorController extends Controller
 
     public function update(Request $request, Jugador $jugador)
     {
-        $jugador->update($request->all());
+        $request->validate([
+            'nombre'   => 'sometimes|string|max:100',
+            'posicion' => 'sometimes|string|max:50',
+            'dorsal'   => 'sometimes|integer',
+            'club_id'  => 'sometimes|exists:clubs,id',
+        ]);
+
+        $jugador->update($request->only(['nombre', 'posicion', 'dorsal', 'club_id']));
         return $jugador;
     }
 

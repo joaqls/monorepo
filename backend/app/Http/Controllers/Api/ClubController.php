@@ -31,7 +31,13 @@ class ClubController extends Controller
 
     public function update(Request $request, Club $club)
     {
-        $club->update($request->all());
+        $request->validate([
+            'nombre'    => 'sometimes|string|max:100',
+            'ciudad'    => 'sometimes|string|max:100',
+            'categoria' => 'sometimes|string|max:50',
+        ]);
+
+        $club->update($request->only(['nombre', 'ciudad', 'categoria']));
         return $club;
     }
 

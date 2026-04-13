@@ -5,7 +5,7 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-capitan',
   templateUrl: './capitan.component.html',
-  styleUrls: ['./capitan.component.css']
+  styles: []
 })
 export class CapitanComponent implements OnInit {
 

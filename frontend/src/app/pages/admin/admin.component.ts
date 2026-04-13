@@ -4,7 +4,7 @@ import { PartidosService } from '../../services/partidos.service';
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
-  styleUrls: ['./admin.component.css']
+  styles: []
 })
 export class AdminComponent implements OnInit {
 
