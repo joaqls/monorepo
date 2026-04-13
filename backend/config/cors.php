@@ -15,27 +15,10 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [
-        'http://localhost:4200',           // Angular dev (default port)
-        'http://localhost:3000',           // Alternative dev ports
-        'http://localhost:8000',
-        'http://127.0.0.1:4200',
-        'http://127.0.0.1:3000',
-        'http://127.0.0.1:8000',
-        // Production domains - Frontend y Backend
-        'https://monorepo-copy-production-6c9d.up.railway.app',
-        'https://monorepo-production-1c90.up.railway.app',
-    ],
+    // API stateless: permitir todos los orígenes simplifica despliegues multi-dominio.
+    'allowed_origins' => ['*'],
 
-    'allowed_origins_patterns' => [
-        // Permitir cualquier localhost en cualquier puerto (desarrollo)
-        '#http://localhost:\d+#',
-        '#http://127\.0\.0\.1:\d+#',
-        // Permitir frontends desplegados en Railway (subdominios *.up.railway.app)
-        '#https://[a-z0-9\-]+\.up\.railway\.app$#i',
-        // Permitir la URL de producción conocida
-        '#https://monorepo-copy-production-6c9d\.up\.railway\.app$#i',
-    ],
+    'allowed_origins_patterns' => [],
 
     'allowed_headers' => ['*'],
 
@@ -48,5 +31,5 @@ return [
 
     'max_age' => 3600,
 
-    'supports_credentials' => true,
+    'supports_credentials' => false,
 ];
