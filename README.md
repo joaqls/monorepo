@@ -33,3 +33,7 @@ Monorepo con backend Laravel y frontend Angular.
 - Commits pequeños por carpeta (`backend`, `frontend` o raíz).
 - Evitar dependencias compartidas en la raíz salvo necesidad real.
 - Documentar cambios de arquitectura en `docs/`.
+
+## Despliegue de producción
+
+- Guía de despliegue usada en este proyecto: `docs/despliegue-produccion-railway.md`.

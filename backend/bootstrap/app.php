@@ -13,6 +13,10 @@ return Application::configure(basePath: dirname(__DIR__))
     )
 
     ->withMiddleware(function ($middleware) {
+        // Agregar CORS middleware globalmente
+        $middleware->append(\Fruitcake\Cors\HandleCors::class);
+
+        // Alias para middleware personalizado
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
         ]);

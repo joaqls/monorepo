@@ -14,7 +14,8 @@ class Partido extends Model
         'club_local_id',
         'club_visitante_id',
         'fecha',
-        'resultado'
+        'resultado',
+        'arbitro',
     ];
 
     public function liga()
