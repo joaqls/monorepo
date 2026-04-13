@@ -22,15 +22,13 @@ describe('AuthService', () => {
 
   it('debe enviar POST al registrar usuario y devolver la respuesta', () => {
     const mockUser = { nombre: 'Pepe', email: 'pepe@example.com' };
-    const mockResp = { ok: true, message: 'Usuario creado' };
+    const mockResp = { id: 1, usuario: 'Pepe', rol: 'usuario' };
 
     service.registrarUsuario(mockUser).subscribe(resp => {
       expect(resp).toEqual(mockResp);
     });
 
-    const expectedUrl = '/auth/register';
-
-    const req = httpMock.expectOne(expectedUrl);
+    const req = httpMock.expectOne((request) => request.url.endsWith('/auth/register'));
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(mockUser);
 

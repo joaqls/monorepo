@@ -4,6 +4,11 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 
+// Compatibilidad temporal para despliegues con cachés antiguos de middleware.
+if (!class_exists('Fruitcake\\Cors\\HandleCors') && class_exists(\Illuminate\Http\Middleware\HandleCors::class)) {
+    class_alias(\Illuminate\Http\Middleware\HandleCors::class, 'Fruitcake\\Cors\\HandleCors');
+}
+
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
