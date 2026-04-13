@@ -30,6 +30,8 @@ return [
         // Permitir cualquier localhost en cualquier puerto (desarrollo)
         '#http://localhost:\d+#',
         '#http://127\.0\.0\.1:\d+#',
+        // Permitir frontends desplegados en Railway
+        '#https://[a-z0-9-]+\.up\.railway\.app#i',
     ],
 
     'allowed_headers' => ['*'],

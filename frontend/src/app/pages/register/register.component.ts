@@ -52,6 +52,7 @@ export class RegisterComponent {
       error: (err: HttpErrorResponse | Error) => {
         const apiMessage = err instanceof HttpErrorResponse ? err.error?.message : null;
         const fieldErrors = err instanceof HttpErrorResponse ? err.error?.errors : null;
+        const plainMessage = err instanceof Error ? err.message : null;
 
         if (fieldErrors) {
           const allErrors = Object.values(fieldErrors).flat().filter(
@@ -83,6 +84,11 @@ export class RegisterComponent {
           }
 
           alert(apiMessage);
+          return;
+        }
+
+        if (plainMessage) {
+          alert(plainMessage);
           return;
         }
 

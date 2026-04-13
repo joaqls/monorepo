@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8000/api',
+  apiUrl: 'https://monorepo-copy-production-6c9d.up.railway.app/api',
 };
