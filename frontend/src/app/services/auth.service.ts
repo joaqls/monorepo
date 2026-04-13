@@ -20,9 +20,17 @@ export class AuthService {
   }
 
   registrarUsuario(usuario: any): Observable<any> {
+    console.log('[AUTH_SERVICE] Registrando usuario:', usuario);
+    console.log('[AUTH_SERVICE] Using apiUrl:', this.apiUrl);
     return this.http.post(`${this.apiUrl}/register`, usuario).pipe(
-      map((res) => this.validateAuthPayload(res)),
-      catchError((error) => this.handleHttpError(error, 'No se pudo registrar el usuario'))
+      map((res) => {
+        console.log('[AUTH_SERVICE] Respuesta registro:', res);
+        return this.validateAuthPayload(res);
+      }),
+      catchError((error) => {
+        console.error('[AUTH_SERVICE] Error al registrar:', error);
+        return this.handleHttpError(error, 'No se pudo registrar el usuario');
+      })
     );
   }
 
