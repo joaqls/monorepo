@@ -60,6 +60,11 @@ export class RegisterComponent {
       },
       error: (err: HttpErrorResponse | Error) => {
         console.error('[REGISTRO ERROR]', err);
+        if (err instanceof HttpErrorResponse && err.status === 0) {
+          alert('No se pudo conectar con el backend (posible CORS o red en deploy).');
+          return;
+        }
+
         const apiMessage = err instanceof HttpErrorResponse ? err.error?.message : null;
         const fieldErrors = err instanceof HttpErrorResponse ? err.error?.errors : null;
         const plainMessage = err instanceof Error ? err.message : null;
