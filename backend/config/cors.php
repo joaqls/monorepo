@@ -22,16 +22,19 @@ return [
         'http://127.0.0.1:4200',
         'http://127.0.0.1:3000',
         'http://127.0.0.1:8000',
-        // Production domains
+        // Production domains - Frontend y Backend
         'https://monorepo-copy-production-6c9d.up.railway.app',
+        'https://monorepo-production-1c90.up.railway.app',
     ],
 
     'allowed_origins_patterns' => [
         // Permitir cualquier localhost en cualquier puerto (desarrollo)
         '#http://localhost:\d+#',
         '#http://127\.0\.0\.1:\d+#',
-        // Permitir frontends desplegados en Railway
-        '#https://[a-z0-9-]+\.up\.railway\.app#i',
+        // Permitir frontends desplegados en Railway (subdominios *.up.railway.app)
+        '#https://[a-z0-9\-]+\.up\.railway\.app$#i',
+        // Permitir la URL de producción conocida
+        '#https://monorepo-copy-production-6c9d\.up\.railway\.app$#i',
     ],
 
     'allowed_headers' => ['*'],
