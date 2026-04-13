@@ -21,15 +21,22 @@
           </div>
 
           <div class="mb-3">
-            <label for="password" class="form-label">Contraseña</label>
+            <label for="password" class="form-label">Contraseña (mínimo 8 caracteres)</label>
             <input
               type="password"
               id="password"
               class="form-control"
+              [class.is-invalid]="password && password.length < 8"
               [(ngModel)]="password"
               name="password"
               required
             >
+            <div class="invalid-feedback" *ngIf="password && password.length < 8">
+              La contraseña debe tener mínimo 8 caracteres (actualmente {{ password.length }})
+            </div>
+            <small class="form-text text-muted" *ngIf="password && password.length >= 8">
+              ✓ Contraseña válida
+            </small>
           </div>
 
           <div class="mb-3">

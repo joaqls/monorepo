@@ -13,6 +13,7 @@ export class RegisterComponent {
   password = '';
   rol = '';
   equipo = '';
+  passwordError = '';
 
   constructor(
     private authService: AuthService,
@@ -22,9 +23,17 @@ export class RegisterComponent {
   registrar() {
     this.usuario = this.usuario.trim();
     this.equipo = this.equipo.trim();
+    this.passwordError = '';
 
     if (!this.usuario || !this.password || !this.rol) {
       alert('Completa los campos obligatorios');
+      return;
+    }
+
+    // Validar contraseña (mínimo 8 caracteres)
+    if (this.password.length < 8) {
+      this.passwordError = 'La contraseña debe tener mínimo 8 caracteres';
+      alert(this.passwordError);
       return;
     }
 
