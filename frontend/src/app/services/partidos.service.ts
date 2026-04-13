@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -13,17 +14,26 @@ export class PartidosService {
 
   // ADMIN — crear partido
   crearPartido(partido: any): Observable<any> {
-    return this.http.post(this.apiUrl, partido);
+    return this.http.post(this.apiUrl, partido).pipe(
+      map((res) => this.validateObjectPayload(res, 'partido')),
+      catchError((error) => this.handleHttpError(error, 'No se pudo crear el partido'))
+    );
   }
 
   // ADMIN — listar todos
   obtenerPartidos(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl);
+    return this.http.get<any[]>(this.apiUrl).pipe(
+      map((res) => this.validateArrayPayload(res, 'partidos')),
+      catchError((error) => this.handleHttpError(error, 'No se pudieron cargar los partidos'))
+    );
   }
 
   // ADMIN — partidos en revisión
   obtenerPartidosEnRevision(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/revision`);
+    return this.http.get<any[]>(`${this.apiUrl}/revision`).pipe(
+      map((res) => this.validateArrayPayload(res, 'partidos en revisión')),
+      catchError((error) => this.handleHttpError(error, 'No se pudieron cargar los partidos en revisión'))
+    );
   }
 
   // ADMIN — confirmar resultado
@@ -32,20 +42,31 @@ export class PartidosService {
     resultadoLocal: number,
     resultadoVisitante: number
   ): Observable<any> {
-    return this.http.put(`${this.apiUrl}/confirmar/${id}`, {
-      resultadoLocal,
-      resultadoVisitante
-    });
+    return this.http
+      .put(`${this.apiUrl}/confirmar/${id}`, {
+        resultadoLocal,
+        resultadoVisitante
+      })
+      .pipe(
+        map((res) => this.validateObjectPayload(res, 'confirmación de resultado')),
+        catchError((error) => this.handleHttpError(error, 'No se pudo confirmar el resultado'))
+      );
   }
 
   // ÁRBITRO
   obtenerPartidosPorArbitro(arbitro: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/arbitro/${arbitro}`);
+    return this.http.get<any[]>(`${this.apiUrl}/arbitro/${arbitro}`).pipe(
+      map((res) => this.validateArrayPayload(res, 'partidos del árbitro')),
+      catchError((error) => this.handleHttpError(error, 'No se pudieron cargar los partidos del árbitro'))
+    );
   }
 
   // USUARIO / CAPITÁN
   obtenerPartidosPorEquipo(equipo: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/equipo/${equipo}`);
+    return this.http.get<any[]>(`${this.apiUrl}/equipo/${equipo}`).pipe(
+      map((res) => this.validateArrayPayload(res, 'partidos del equipo')),
+      catchError((error) => this.handleHttpError(error, 'No se pudieron cargar los partidos del equipo'))
+    );
   }
 
   // CAPITÁN — enviar resultado
@@ -54,9 +75,44 @@ export class PartidosService {
     rol: 'capitanLocal' | 'capitanVisitante',
     resultado: string
   ): Observable<any> {
-    return this.http.put(`${this.apiUrl}/resultado/${id}`, {
-      rol,
-      resultado
-    });
+    return this.http
+      .put(`${this.apiUrl}/resultado/${id}`, {
+        rol,
+        resultado
+      })
+      .pipe(
+        map((res) => this.validateObjectPayload(res, 'envío de resultado')),
+        catchError((error) => this.handleHttpError(error, 'No se pudo enviar el resultado'))
+      );
+  }
+
+  private validateArrayPayload(payload: any, source: string): any[] {
+    if (!Array.isArray(payload)) {
+      throw new Error(`Formato de respuesta inválido para ${source}`);
+    }
+
+    return payload;
+  }
+
+  private validateObjectPayload(payload: any, source: string): any {
+    if (!payload || typeof payload !== 'object') {
+      throw new Error(`Formato de respuesta inválido para ${source}`);
+    }
+
+    return payload;
+  }
+
+  private handleHttpError(error: unknown, fallbackMessage: string): Observable<never> {
+    if (error instanceof HttpErrorResponse) {
+      const apiMessage = typeof error.error?.message === 'string' ? error.error.message : '';
+      const message = apiMessage || fallbackMessage;
+      return throwError(() => new Error(message));
+    }
+
+    if (error instanceof Error) {
+      return throwError(() => error);
+    }
+
+    return throwError(() => new Error(fallbackMessage));
   }
 }

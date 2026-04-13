@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
@@ -26,6 +26,7 @@ import { UsuarioComponent } from './pages/usuario/usuario.component';
 import { CapitanComponent } from './pages/capitan/capitan.component';
 import { ArbitroComponent } from './pages/arbitro/arbitro.component';
 import { ApiInterceptor } from './core/interceptors/api.interceptor';
+import { GlobalErrorHandler } from './core/errors/global-error-handler';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,10 @@ import { ApiInterceptor } from './core/interceptors/api.interceptor';
       provide: HTTP_INTERCEPTORS,
       useClass: ApiInterceptor,
       multi: true
+    },
+    {
+      provide: ErrorHandler,
+      useClass: GlobalErrorHandler
     }
   ],
   bootstrap: [AppComponent]
