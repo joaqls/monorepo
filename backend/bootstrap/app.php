@@ -18,6 +18,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
 
     ->withMiddleware(function ($middleware) {
+        $middleware->append(\App\Http\Middleware\ApiCorsMiddleware::class);
+
         // CORS nativo de Laravel 11
         $middleware->append(\Illuminate\Http\Middleware\HandleCors::class);
 
