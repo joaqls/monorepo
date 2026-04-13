@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PartidosService {
 
-  private apiUrl = 'https://monorepo-copy-production-6c9d.up.railway.app/api/partidos';
+  private apiUrl = environment.apiUrl + '/partidos';
 
   constructor(private http: HttpClient) {}
 
