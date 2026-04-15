@@ -27,6 +27,12 @@
 
   </div>
 
+  <div *ngIf="haEnviadoResultado(p)" class="mb-2">
+    <small>
+      Tu resultado enviado: <strong>{{ resultadoCapitanActual(p) }}</strong>
+    </small>
+  </div>
+
   <div *ngIf="!puedeEnviarResultado(p)">
     <em>{{ mensajeEstado(p) }}</em>
   </div>

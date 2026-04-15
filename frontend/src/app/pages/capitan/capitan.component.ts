@@ -81,13 +81,48 @@ export class CapitanComponent implements OnInit {
     return !partido?.resultado_capitan_visitante;
   }
 
+  haEnviadoResultado(partido: any): boolean {
+    const rolCapitan = this.obtenerRolCapitan(partido);
+    if (rolCapitan === 'capitanLocal') {
+      return !!partido?.resultado_capitan_local;
+    }
+
+    return !!partido?.resultado_capitan_visitante;
+  }
+
+  resultadoCapitanActual(partido: any): string | null {
+    const rolCapitan = this.obtenerRolCapitan(partido);
+    if (rolCapitan === 'capitanLocal') {
+      return partido?.resultado_capitan_local ?? null;
+    }
+
+    return partido?.resultado_capitan_visitante ?? null;
+  }
+
+  faltaResultadoContrario(partido: any): boolean {
+    const rolCapitan = this.obtenerRolCapitan(partido);
+    if (rolCapitan === 'capitanLocal') {
+      return !partido?.resultado_capitan_visitante;
+    }
+
+    return !partido?.resultado_capitan_local;
+  }
+
   mensajeEstado(partido: any): string {
     if (!this.partidoFinalizado(partido)) {
       return 'El partido aun no se ha jugado';
     }
 
     if (this.getEstadoPartido(partido) === 'en_revision') {
-      return 'Partido en revision por discrepancia de capitanes';
+      return 'Resultado en conflicto. Resolucion pendiente de administrador.';
+    }
+
+    if (this.haEnviadoResultado(partido) && this.faltaResultadoContrario(partido)) {
+      return 'Resultado enviado. A espera de capitan contrario.';
+    }
+
+    if (this.getEstadoPartido(partido) === 'confirmado') {
+      return 'Resultado confirmado.';
     }
 
     return 'No se puede modificar este partido';
