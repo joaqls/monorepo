@@ -100,6 +100,41 @@
   <p class="mb-2">
     Capitán visitante: <strong>{{ p.resultado_capitan_visitante || 'Sin enviar' }}</strong>
   </p>
+
+  <div class="d-flex gap-2 mb-2">
+    <button class="btn btn-outline-primary btn-sm" (click)="usarResultadoCapitan(p, 'local')">
+      Usar resultado capitán local
+    </button>
+    <button class="btn btn-outline-primary btn-sm" (click)="usarResultadoCapitan(p, 'visitante')">
+      Usar resultado capitán visitante
+    </button>
+  </div>
+
+  <div class="row g-2 align-items-end mb-2" *ngIf="resolucionesRevision[p.id]">
+    <div class="col-sm-3">
+      <label class="form-label">Goles local</label>
+      <input
+        class="form-control"
+        type="number"
+        min="0"
+        [(ngModel)]="resolucionesRevision[p.id].local">
+    </div>
+
+    <div class="col-sm-3">
+      <label class="form-label">Goles visitante</label>
+      <input
+        class="form-control"
+        type="number"
+        min="0"
+        [(ngModel)]="resolucionesRevision[p.id].visitante">
+    </div>
+
+    <div class="col-sm-6">
+      <button class="btn btn-success" (click)="confirmarRevision(p)">
+        Confirmar resultado
+      </button>
+    </div>
+  </div>
 </div>
 
 <p *ngIf="partidosRevision.length === 0" class="text-muted">

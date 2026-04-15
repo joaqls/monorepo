@@ -21,6 +21,10 @@ export class AdminComponent implements OnInit {
   arbitros: any[] = [];
   partidos: any[] = [];
   partidosRevision: any[] = [];
+  resolucionesRevision: Record<number, {
+    local: number | null;
+    visitante: number | null;
+  }> = {};
 
   ediciones: Record<number, {
     fecha: string;
@@ -104,8 +108,14 @@ export class AdminComponent implements OnInit {
 
   cargarPartidosRevision() {
     this.partidosService.obtenerPartidosEnRevision().subscribe({
-      next: (data) => this.partidosRevision = data,
-      error: () => this.partidosRevision = []
+      next: (data) => {
+        this.partidosRevision = data;
+        this.sincronizarResolucionesRevision();
+      },
+      error: () => {
+        this.partidosRevision = [];
+        this.resolucionesRevision = {};
+      }
     });
   }
 
@@ -170,6 +180,96 @@ export class AdminComponent implements OnInit {
     return typeof match?.nombre === 'string'
       ? match.nombre
       : (side === 'local' ? 'Club local' : 'Club visitante');
+  }
+
+  usarResultadoCapitan(partido: any, side: 'local' | 'visitante') {
+    const id = Number(partido?.id);
+    if (!id || !this.resolucionesRevision[id]) {
+      return;
+    }
+
+    const raw = side === 'local'
+      ? partido?.resultado_capitan_local
+      : partido?.resultado_capitan_visitante;
+
+    const parsed = this.parseMarcador(raw);
+    if (!parsed) {
+      alert('Ese capitán todavía no ha enviado un resultado válido');
+      return;
+    }
+
+    this.resolucionesRevision[id] = {
+      local: parsed.local,
+      visitante: parsed.visitante,
+    };
+  }
+
+  confirmarRevision(partido: any) {
+    const id = Number(partido?.id);
+    if (!id || !this.resolucionesRevision[id]) {
+      return;
+    }
+
+    const local = this.resolucionesRevision[id].local;
+    const visitante = this.resolucionesRevision[id].visitante;
+
+    if (local === null || visitante === null) {
+      alert('Introduce un marcador local y visitante');
+      return;
+    }
+
+    if (local < 0 || visitante < 0) {
+      alert('Los goles no pueden ser negativos');
+      return;
+    }
+
+    this.partidosService.confirmarResultado(String(id), local, visitante).subscribe({
+      next: () => {
+        alert('Resultado confirmado por administración');
+        this.cargarPartidos();
+        this.cargarPartidosRevision();
+      },
+      error: (err: Error) => {
+        alert(err.message || 'No se pudo confirmar el resultado');
+      }
+    });
+  }
+
+  private sincronizarResolucionesRevision(): void {
+    const next: typeof this.resolucionesRevision = {};
+
+    for (const partido of this.partidosRevision) {
+      const id = Number(partido?.id);
+      if (!id) {
+        continue;
+      }
+
+      const parsed = this.parseMarcador(partido?.resultado_capitan_local)
+        ?? this.parseMarcador(partido?.resultado_capitan_visitante);
+
+      next[id] = {
+        local: parsed?.local ?? null,
+        visitante: parsed?.visitante ?? null,
+      };
+    }
+
+    this.resolucionesRevision = next;
+  }
+
+  private parseMarcador(raw: unknown): { local: number; visitante: number } | null {
+    if (typeof raw !== 'string') {
+      return null;
+    }
+
+    const match = raw.trim().match(/^(\d+)\-(\d+)$/);
+    if (!match) {
+      return null;
+    }
+
+    return {
+      local: Number(match[1]),
+      visitante: Number(match[2]),
+    };
   }
 
   private sincronizarEdiciones(): void {
