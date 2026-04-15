@@ -7,7 +7,8 @@
 <div *ngFor="let p of partidos" class="mb-3 border p-3 rounded">
 
   <p>
-    {{ p.clubLocal?.nombre || 'Local' }} vs {{ p.clubVisitante?.nombre || 'Visitante' }} —
+    {{ nombreClub(p, 'local') }} vs {{ nombreClub(p, 'visitante') }} —
+    {{ p.fecha | date:'dd/MM/yyyy' }} —
     <strong>Estado:</strong> {{ getEstadoPartido(p) }}
   </p>
 
@@ -17,7 +18,7 @@
     <input
       class="form-control mb-2"
       placeholder="Ej: 2-1"
-      [(ngModel)]="resultado">
+      [(ngModel)]="resultados[p.id]">
 
     <button
       class="btn btn-primary"

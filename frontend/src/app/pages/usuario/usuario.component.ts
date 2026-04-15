@@ -9,6 +9,7 @@ import { AuthService } from '../../services/auth.service';
 export class UsuarioComponent implements OnInit {
 
   partidos: any[] = [];
+  clubs: any[] = [];
   equipo: string | null = null;
 
   constructor(
@@ -17,6 +18,11 @@ export class UsuarioComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.partidosService.obtenerClubs().subscribe({
+      next: (clubs) => this.clubs = clubs,
+      error: () => this.clubs = []
+    });
+
     const usuario = this.authService.getUsuario();
 
     if (usuario && usuario.equipo) {
@@ -26,5 +32,20 @@ export class UsuarioComponent implements OnInit {
         .obtenerPartidosPorEquipo(usuario.equipo)
         .subscribe(data => this.partidos = data);
     }
+  }
+
+  nombreClub(partido: any, side: 'local' | 'visitante'): string {
+    const relation = side === 'local' ? partido?.clubLocal : partido?.clubVisitante;
+    if (typeof relation?.nombre === 'string' && relation.nombre.trim() !== '') {
+      return relation.nombre;
+    }
+
+    const id = Number(side === 'local' ? partido?.club_local_id : partido?.club_visitante_id);
+    const match = this.clubs.find((club) => Number(club?.id) === id);
+    if (typeof match?.nombre === 'string' && match.nombre.trim() !== '') {
+      return match.nombre;
+    }
+
+    return side === 'local' ? 'Club local' : 'Club visitante';
   }
 }

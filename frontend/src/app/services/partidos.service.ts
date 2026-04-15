@@ -15,7 +15,7 @@ export class PartidosService {
   // ADMIN — crear partido
   crearPartido(partido: any): Observable<any> {
     return this.http.post(this.apiUrl, partido).pipe(
-      map((res) => this.validateObjectPayload(res, 'partido')),
+      map((res) => this.normalizePartido(this.validateObjectPayload(res, 'partido'))),
       catchError((error) => this.handleHttpError(error, 'No se pudo crear el partido'))
     );
   }
@@ -23,7 +23,7 @@ export class PartidosService {
   // ADMIN — listar todos
   obtenerPartidos(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl).pipe(
-      map((res) => this.validateArrayPayload(res, 'partidos')),
+      map((res) => this.normalizePartidos(this.validateArrayPayload(res, 'partidos'))),
       catchError((error) => this.handleHttpError(error, 'No se pudieron cargar los partidos'))
     );
   }
@@ -52,7 +52,7 @@ export class PartidosService {
   // ADMIN — partidos en revisión
   obtenerPartidosEnRevision(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/revision`).pipe(
-      map((res) => this.validateArrayPayload(res, 'partidos en revisión')),
+      map((res) => this.normalizePartidos(this.validateArrayPayload(res, 'partidos en revisión'))),
       catchError((error) => this.handleHttpError(error, 'No se pudieron cargar los partidos en revisión'))
     );
   }
@@ -76,7 +76,7 @@ export class PartidosService {
 
   actualizarPartido(id: string, partido: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/${id}`, partido).pipe(
-      map((res) => this.validateObjectPayload(res, 'actualizacion de partido')),
+      map((res) => this.normalizePartido(this.validateObjectPayload(res, 'actualizacion de partido'))),
       catchError((error) => this.handleHttpError(error, 'No se pudo actualizar el partido'))
     );
   }
@@ -84,7 +84,7 @@ export class PartidosService {
   // ÁRBITRO
   obtenerPartidosPorArbitro(arbitro: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/arbitro/${arbitro}`).pipe(
-      map((res) => this.validateArrayPayload(res, 'partidos del árbitro')),
+      map((res) => this.normalizePartidos(this.validateArrayPayload(res, 'partidos del árbitro'))),
       catchError((error) => this.handleHttpError(error, 'No se pudieron cargar los partidos del árbitro'))
     );
   }
@@ -92,7 +92,7 @@ export class PartidosService {
   // USUARIO / CAPITÁN
   obtenerPartidosPorEquipo(equipo: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/equipo/${equipo}`).pipe(
-      map((res) => this.validateArrayPayload(res, 'partidos del equipo')),
+      map((res) => this.normalizePartidos(this.validateArrayPayload(res, 'partidos del equipo'))),
       catchError((error) => this.handleHttpError(error, 'No se pudieron cargar los partidos del equipo'))
     );
   }
@@ -109,9 +109,29 @@ export class PartidosService {
         resultado
       })
       .pipe(
-        map((res) => this.validateObjectPayload(res, 'envío de resultado')),
+        map((res) => this.normalizePartido(this.validateObjectPayload(res, 'envío de resultado'))),
         catchError((error) => this.handleHttpError(error, 'No se pudo enviar el resultado'))
       );
+  }
+
+  private normalizePartidos(partidos: any[]): any[] {
+    return partidos.map((partido) => this.normalizePartido(partido));
+  }
+
+  private normalizePartido(partido: any): any {
+    if (!partido || typeof partido !== 'object') {
+      return partido;
+    }
+
+    const normalized = { ...partido };
+
+    normalized.clubLocal = normalized.clubLocal ?? normalized.club_local ?? null;
+    normalized.clubVisitante = normalized.clubVisitante ?? normalized.club_visitante ?? null;
+
+    normalized.club_local_id = normalized.club_local_id ?? normalized.clubLocal?.id ?? normalized.club_local?.id ?? null;
+    normalized.club_visitante_id = normalized.club_visitante_id ?? normalized.clubVisitante?.id ?? normalized.club_visitante?.id ?? null;
+
+    return normalized;
   }
 
   private validateArrayPayload(payload: any, source: string): any[] {

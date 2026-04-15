@@ -31,8 +31,6 @@
     </option>
   </select>
 
-  <input class="form-control mb-2" placeholder="Resultado (opcional, ej: 1-0)" [(ngModel)]="resultado">
-
   <button class="btn btn-success" (click)="crearPartido()">
     Crear partido
   </button>
@@ -44,9 +42,9 @@
 
 <div *ngFor="let p of partidos" class="mb-3 border rounded p-3">
   <p class="mb-2">
-    <strong>{{ p.clubLocal?.nombre || 'Club local' }}</strong>
+    <strong>{{ nombreClub(p, 'local') }}</strong>
     vs
-    <strong>{{ p.clubVisitante?.nombre || 'Club visitante' }}</strong>
+    <strong>{{ nombreClub(p, 'visitante') }}</strong>
   </p>
 
   <div class="row g-2 mb-2">
@@ -92,7 +90,18 @@
 
 <div *ngFor="let p of partidosRevision" class="border p-2 mb-3">
   <p>
-    {{ p.clubLocal?.nombre || 'Club local' }} vs {{ p.clubVisitante?.nombre || 'Club visitante' }} <br>
+    {{ nombreClub(p, 'local') }} vs {{ nombreClub(p, 'visitante') }} <br>
     Fecha: {{ p.fecha | date:'dd/MM/yyyy' }}
   </p>
+
+  <p class="mb-1">
+    Capitán local: <strong>{{ p.resultado_capitan_local || 'Sin enviar' }}</strong>
+  </p>
+  <p class="mb-2">
+    Capitán visitante: <strong>{{ p.resultado_capitan_visitante || 'Sin enviar' }}</strong>
+  </p>
 </div>
+
+<p *ngIf="partidosRevision.length === 0" class="text-muted">
+  No hay partidos en revisión actualmente.
+</p>

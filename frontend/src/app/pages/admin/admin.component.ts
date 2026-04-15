@@ -14,7 +14,6 @@ export class AdminComponent implements OnInit {
   clubVisitanteId: number | null = null;
   fecha = '';
   arbitro = '';
-  resultado = '';
 
   // Listados
   ligas: any[] = [];
@@ -37,6 +36,7 @@ export class AdminComponent implements OnInit {
     this.cargarClubs();
     this.cargarArbitros();
     this.cargarPartidos();
+    this.cargarPartidosRevision();
   }
 
   // ======================
@@ -64,7 +64,6 @@ export class AdminComponent implements OnInit {
       club_visitante_id: this.clubVisitanteId,
       fecha: this.fecha,
       arbitro: this.arbitro || null,
-      resultado: this.resultado || null,
     };
 
     this.partidosService.crearPartido(partido).subscribe({
@@ -85,7 +84,6 @@ export class AdminComponent implements OnInit {
     this.clubVisitanteId = null;
     this.fecha = '';
     this.arbitro = '';
-    this.resultado = '';
   }
 
   // ======================
@@ -95,14 +93,19 @@ export class AdminComponent implements OnInit {
     this.partidosService.obtenerPartidos().subscribe({
       next: (data) => {
         this.partidos = data;
-        this.partidosRevision = data.filter((p: any) => p?.estado === 'en_revision');
         this.sincronizarEdiciones();
       },
       error: () => {
         this.partidos = [];
-        this.partidosRevision = [];
         this.ediciones = {};
       }
+    });
+  }
+
+  cargarPartidosRevision() {
+    this.partidosService.obtenerPartidosEnRevision().subscribe({
+      next: (data) => this.partidosRevision = data,
+      error: () => this.partidosRevision = []
     });
   }
 
@@ -144,11 +147,29 @@ export class AdminComponent implements OnInit {
       next: () => {
         alert('Partido actualizado');
         this.cargarPartidos();
+        this.cargarPartidosRevision();
       },
       error: (err: Error) => {
         alert(err.message || 'No se pudo actualizar el partido');
       }
     });
+  }
+
+  nombreClub(partido: any, side: 'local' | 'visitante'): string {
+    const relation = side === 'local' ? partido?.clubLocal : partido?.clubVisitante;
+    if (typeof relation?.nombre === 'string' && relation.nombre.trim() !== '') {
+      return relation.nombre;
+    }
+
+    const id = Number(side === 'local' ? partido?.club_local_id : partido?.club_visitante_id);
+    if (!id) {
+      return side === 'local' ? 'Club local' : 'Club visitante';
+    }
+
+    const match = this.clubs.find((club) => Number(club?.id) === id);
+    return typeof match?.nombre === 'string'
+      ? match.nombre
+      : (side === 'local' ? 'Club local' : 'Club visitante');
   }
 
   private sincronizarEdiciones(): void {

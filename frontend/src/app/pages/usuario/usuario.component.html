@@ -6,7 +6,7 @@
 
 <ul *ngIf="partidos.length > 0; else sinPartidos">
   <li *ngFor="let p of partidos">
-    {{ p.clubLocal?.nombre || 'Local' }} vs {{ p.clubVisitante?.nombre || 'Visitante' }}
+    {{ nombreClub(p, 'local') }} vs {{ nombreClub(p, 'visitante') }}
     —
     {{ p.fecha | date:'dd/MM/yyyy' }}
   </li>
