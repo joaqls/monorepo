@@ -9,6 +9,8 @@ class LigaSeeder extends Seeder
 {
     public function run(): void
     {
+        Liga::query()->delete();
+
         Liga::create([
             'nombre' => 'Liga Escolar',
             'deporte' => 'Fútbol',

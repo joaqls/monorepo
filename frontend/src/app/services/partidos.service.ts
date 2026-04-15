@@ -42,6 +42,13 @@ export class PartidosService {
     );
   }
 
+  obtenerArbitros(): Observable<any[]> {
+    return this.http.get<any[]>('/arbitros').pipe(
+      map((res) => this.validateArrayPayload(res, 'arbitros')),
+      catchError((error) => this.handleHttpError(error, 'No se pudieron cargar los arbitros'))
+    );
+  }
+
   // ADMIN — partidos en revisión
   obtenerPartidosEnRevision(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/revision`).pipe(
@@ -65,6 +72,13 @@ export class PartidosService {
         map((res) => this.validateObjectPayload(res, 'confirmación de resultado')),
         catchError((error) => this.handleHttpError(error, 'No se pudo confirmar el resultado'))
       );
+  }
+
+  actualizarPartido(id: string, partido: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, partido).pipe(
+      map((res) => this.validateObjectPayload(res, 'actualizacion de partido')),
+      catchError((error) => this.handleHttpError(error, 'No se pudo actualizar el partido'))
+    );
   }
 
   // ÁRBITRO

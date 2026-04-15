@@ -19,14 +19,23 @@ export class AdminComponent implements OnInit {
   // Listados
   ligas: any[] = [];
   clubs: any[] = [];
+  arbitros: any[] = [];
   partidos: any[] = [];
   partidosRevision: any[] = [];
+
+  ediciones: Record<number, {
+    fecha: string;
+    arbitro: string;
+    ubicacion: string;
+    resultado: string;
+  }> = {};
 
   constructor(private partidosService: PartidosService) {}
 
   ngOnInit(): void {
     this.cargarLigas();
     this.cargarClubs();
+    this.cargarArbitros();
     this.cargarPartidos();
   }
 
@@ -87,10 +96,12 @@ export class AdminComponent implements OnInit {
       next: (data) => {
         this.partidos = data;
         this.partidosRevision = data.filter((p: any) => p?.estado === 'en_revision');
+        this.sincronizarEdiciones();
       },
       error: () => {
         this.partidos = [];
         this.partidosRevision = [];
+        this.ediciones = {};
       }
     });
   }
@@ -107,5 +118,56 @@ export class AdminComponent implements OnInit {
       next: (data) => this.clubs = data,
       error: () => this.clubs = []
     });
+  }
+
+  cargarArbitros() {
+    this.partidosService.obtenerArbitros().subscribe({
+      next: (data) => this.arbitros = data,
+      error: () => this.arbitros = []
+    });
+  }
+
+  actualizarPartido(partido: any) {
+    const id = Number(partido?.id);
+    if (!id || !this.ediciones[id]) {
+      return;
+    }
+
+    const payload = {
+      fecha: this.ediciones[id].fecha,
+      arbitro: this.ediciones[id].arbitro || null,
+      ubicacion: this.ediciones[id].ubicacion || null,
+      resultado: this.ediciones[id].resultado || null,
+    };
+
+    this.partidosService.actualizarPartido(String(id), payload).subscribe({
+      next: () => {
+        alert('Partido actualizado');
+        this.cargarPartidos();
+      },
+      error: (err: Error) => {
+        alert(err.message || 'No se pudo actualizar el partido');
+      }
+    });
+  }
+
+  private sincronizarEdiciones(): void {
+    const nextEdiciones: typeof this.ediciones = {};
+
+    for (const partido of this.partidos) {
+      const id = Number(partido?.id);
+      if (!id) {
+        continue;
+      }
+
+      nextEdiciones[id] = {
+        fecha: typeof partido?.fecha === 'string' ? partido.fecha : '',
+        arbitro: typeof partido?.arbitro === 'string' ? partido.arbitro : '',
+        ubicacion: typeof partido?.ubicacion === 'string' ? partido.ubicacion : '',
+        resultado: typeof partido?.resultado === 'string' ? partido.resultado : '',
+      };
+    }
+
+    this.ediciones = nextEdiciones;
   }
 }

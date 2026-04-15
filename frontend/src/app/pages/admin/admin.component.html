@@ -23,7 +23,14 @@
   </select>
 
   <input class="form-control mb-2" type="date" [(ngModel)]="fecha">
-  <input class="form-control mb-2" placeholder="Árbitro (opcional)" [(ngModel)]="arbitro">
+
+  <select class="form-select mb-2" [(ngModel)]="arbitro">
+    <option [ngValue]="''">Sin árbitro</option>
+    <option *ngFor="let a of arbitros" [ngValue]="a.usuario">
+      {{ a.usuario }}
+    </option>
+  </select>
+
   <input class="form-control mb-2" placeholder="Resultado (opcional, ej: 1-0)" [(ngModel)]="resultado">
 
   <button class="btn btn-success" (click)="crearPartido()">
@@ -35,10 +42,48 @@
 
 <h2>Todos los partidos</h2>
 
-<div *ngFor="let p of partidos" class="mb-2">
-  {{ p.clubLocal?.nombre || p.club_local_id }} vs {{ p.clubVisitante?.nombre || p.club_visitante_id }} —
-  {{ p.fecha | date:'dd/MM/yyyy' }} —
-  <strong>{{ p.resultado || (p.estado === 'en_revision' ? 'En revisión' : 'Pendiente') }}</strong>
+<div *ngFor="let p of partidos" class="mb-3 border rounded p-3">
+  <p class="mb-2">
+    <strong>{{ p.clubLocal?.nombre || 'Club local' }}</strong>
+    vs
+    <strong>{{ p.clubVisitante?.nombre || 'Club visitante' }}</strong>
+  </p>
+
+  <div class="row g-2 mb-2">
+    <div class="col-md-3">
+      <label class="form-label">Fecha</label>
+      <input class="form-control" type="date" [(ngModel)]="ediciones[p.id].fecha">
+    </div>
+
+    <div class="col-md-3">
+      <label class="form-label">Árbitro</label>
+      <select class="form-select" [(ngModel)]="ediciones[p.id].arbitro">
+        <option [ngValue]="''">Sin árbitro</option>
+        <option *ngFor="let a of arbitros" [ngValue]="a.usuario">{{ a.usuario }}</option>
+      </select>
+    </div>
+
+    <div class="col-md-3">
+      <label class="form-label">Ubicación</label>
+      <input class="form-control" type="text" [(ngModel)]="ediciones[p.id].ubicacion">
+    </div>
+
+    <div class="col-md-3">
+      <label class="form-label">Resultado</label>
+      <input class="form-control" type="text" placeholder="Ej: 2-1" [(ngModel)]="ediciones[p.id].resultado">
+    </div>
+  </div>
+
+  <div class="d-flex align-items-center gap-3">
+    <button class="btn btn-primary" (click)="actualizarPartido(p)">
+      Guardar cambios
+    </button>
+
+    <span>
+      Estado:
+      <strong>{{ p.estado || (p.resultado ? 'confirmado' : 'pendiente') }}</strong>
+    </span>
+  </div>
 </div>
 
 <hr>
@@ -47,7 +92,7 @@
 
 <div *ngFor="let p of partidosRevision" class="border p-2 mb-3">
   <p>
-    {{ p.clubLocal?.nombre || p.club_local_id }} vs {{ p.clubVisitante?.nombre || p.club_visitante_id }} <br>
+    {{ p.clubLocal?.nombre || 'Club local' }} vs {{ p.clubVisitante?.nombre || 'Club visitante' }} <br>
     Fecha: {{ p.fecha | date:'dd/MM/yyyy' }}
   </p>
 </div>

@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use Carbon\Carbon;
+use App\Models\Club;
+use App\Models\Liga;
 use App\Models\Partido;
 use Illuminate\Database\Seeder;
 
@@ -14,37 +16,53 @@ class PartidoSeeder extends Seeder
         Partido::query()->delete();
 
         $hoy = Carbon::today();
+        $ligaId = Liga::query()->value('id');
+
+        $clubsByName = Club::query()
+            ->pluck('id', 'nombre')
+            ->all();
 
         $partidos = [
-            // Historial ya jugado
-            ['liga_id' => 1, 'club_local_id' => 1, 'club_visitante_id' => 2, 'dias' => -28, 'resultado' => '2-1', 'arbitro' => 'arbitro1'],
-            ['liga_id' => 1, 'club_local_id' => 2, 'club_visitante_id' => 3, 'dias' => -21, 'resultado' => '1-1', 'arbitro' => 'arbitro2'],
-            ['liga_id' => 1, 'club_local_id' => 3, 'club_visitante_id' => 1, 'dias' => -14, 'resultado' => '0-3', 'arbitro' => 'arbitro1'],
-            ['liga_id' => 1, 'club_local_id' => 1, 'club_visitante_id' => 3, 'dias' => -10, 'resultado' => '2-2', 'arbitro' => 'arbitro2'],
+            // Confirmados ya jugados
+            ['local' => 'Atletico Maestre', 'visitante' => 'Tigres', 'dias' => -10, 'arbitro' => 'arbitro2', 'resultado' => '2-1', 'estado' => 'confirmado'],
+            ['local' => 'Deportivo DAM', 'visitante' => 'Atletico Maestre', 'dias' => -5, 'arbitro' => 'arbitro1', 'resultado' => '1-1', 'estado' => 'confirmado'],
 
-            // Jugados recientemente (para revisar paneles)
-            ['liga_id' => 1, 'club_local_id' => 2, 'club_visitante_id' => 1, 'dias' => -7, 'resultado' => '1-0', 'arbitro' => 'arbitro2'],
-            ['liga_id' => 1, 'club_local_id' => 3, 'club_visitante_id' => 2, 'dias' => -3, 'resultado' => '2-3', 'arbitro' => 'arbitro1'],
+            // En revision: ambos capitanes enviaron resultado distinto
+            [
+                'local' => 'Atletico Maestre',
+                'visitante' => 'Tigres',
+                'dias' => -2,
+                'arbitro' => 'arbitro2',
+                'resultado' => null,
+                'estado' => 'en_revision',
+                'resultado_capitan_local' => '1-0',
+                'resultado_capitan_visitante' => '0-1',
+            ],
 
-            // Pendientes de disputarse (sin resultado)
-            ['liga_id' => 1, 'club_local_id' => 1, 'club_visitante_id' => 2, 'dias' => 1, 'resultado' => null, 'arbitro' => 'arbitro1'],
-            ['liga_id' => 1, 'club_local_id' => 2, 'club_visitante_id' => 3, 'dias' => 3, 'resultado' => null, 'arbitro' => 'arbitro2'],
-            ['liga_id' => 1, 'club_local_id' => 3, 'club_visitante_id' => 1, 'dias' => 5, 'resultado' => null, 'arbitro' => 'arbitro1'],
-
-            // Pendientes sin arbitro asignado (para pruebas de admin)
-            ['liga_id' => 1, 'club_local_id' => 1, 'club_visitante_id' => 3, 'dias' => 7, 'resultado' => null, 'arbitro' => null],
-            ['liga_id' => 1, 'club_local_id' => 2, 'club_visitante_id' => 1, 'dias' => 10, 'resultado' => null, 'arbitro' => null],
-            ['liga_id' => 1, 'club_local_id' => 3, 'club_visitante_id' => 2, 'dias' => 14, 'resultado' => null, 'arbitro' => null],
+            // Pendientes para ambos equipos
+            ['local' => 'Tigres', 'visitante' => 'Atletico Maestre', 'dias' => 2, 'arbitro' => 'arbitro1', 'resultado' => null, 'estado' => 'pendiente'],
+            ['local' => 'Atletico Maestre', 'visitante' => 'Deportivo DAM', 'dias' => 4, 'arbitro' => 'arbitro2', 'resultado' => null, 'estado' => 'pendiente'],
+            ['local' => 'Tigres', 'visitante' => 'Deportivo DAM', 'dias' => 6, 'arbitro' => null, 'resultado' => null, 'estado' => 'pendiente'],
         ];
 
         foreach ($partidos as $partido) {
+            $clubLocalId = $clubsByName[$partido['local']] ?? null;
+            $clubVisitanteId = $clubsByName[$partido['visitante']] ?? null;
+
+            if (!$ligaId || !$clubLocalId || !$clubVisitanteId) {
+                continue;
+            }
+
             Partido::create([
-                'liga_id' => $partido['liga_id'],
-                'club_local_id' => $partido['club_local_id'],
-                'club_visitante_id' => $partido['club_visitante_id'],
+                'liga_id' => $ligaId,
+                'club_local_id' => $clubLocalId,
+                'club_visitante_id' => $clubVisitanteId,
                 'fecha' => $hoy->copy()->addDays($partido['dias'])->toDateString(),
                 'resultado' => $partido['resultado'],
                 'arbitro' => $partido['arbitro'],
+                'estado' => $partido['estado'],
+                'resultado_capitan_local' => $partido['resultado_capitan_local'] ?? null,
+                'resultado_capitan_visitante' => $partido['resultado_capitan_visitante'] ?? null,
             ]);
         }
     }

@@ -9,22 +9,28 @@ class ClubSeeder extends Seeder
 {
     public function run(): void
     {
-        Club::create([
-            'nombre' => 'Atlético Maestre',
-            'ciudad' => 'Ciudad Real',
-            'categoria' => 'Senior'
-        ]);
+        Club::query()->delete();
 
-        Club::create([
-            'nombre' => 'Calatrava FC',
-            'ciudad' => 'Daimiel',
-            'categoria' => 'Juvenil'
-        ]);
+        $clubs = [
+            [
+                'nombre' => 'Atletico Maestre',
+                'ciudad' => 'Ciudad Real',
+                'categoria' => 'Senior',
+            ],
+            [
+                'nombre' => 'Tigres',
+                'ciudad' => 'Daimiel',
+                'categoria' => 'Senior',
+            ],
+            [
+                'nombre' => 'Deportivo DAM',
+                'ciudad' => 'Almagro',
+                'categoria' => 'Senior',
+            ],
+        ];
 
-        Club::create([
-            'nombre' => 'Deportivo DAM',
-            'ciudad' => 'Almagro',
-            'categoria' => 'Senior'
-        ]);
+        foreach ($clubs as $club) {
+            Club::create($club);
+        }
     }
 }

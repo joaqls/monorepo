@@ -26,7 +26,7 @@ class UserSeeder extends Seeder
                 'email' => 'usuario1@liga.local',
                 'password' => 'usuario123',
                 'rol' => 'usuario',
-                'equipo' => 'Atlético Maestre',
+                'equipo' => 'Atletico Maestre',
             ],
             [
                 'usuario' => 'capitanprueba',
@@ -34,7 +34,23 @@ class UserSeeder extends Seeder
                 'email' => 'capitanprueba@liga.local',
                 'password' => 'secreto123',
                 'rol' => 'capitan',
-                'equipo' => 'Atlético Maestre',
+                'equipo' => 'Atletico Maestre',
+            ],
+            [
+                'usuario' => 'usuario2',
+                'name' => 'usuario2',
+                'email' => 'usuario2@liga.local',
+                'password' => 'usuario123',
+                'rol' => 'usuario',
+                'equipo' => 'Tigres',
+            ],
+            [
+                'usuario' => 'capitantigres',
+                'name' => 'capitantigres',
+                'email' => 'capitantigres@liga.local',
+                'password' => 'secreto123',
+                'rol' => 'capitan',
+                'equipo' => 'Tigres',
             ],
             [
                 'usuario' => 'arbitro1',
