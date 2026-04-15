@@ -23,26 +23,91 @@ class PartidoSeeder extends Seeder
             ->all();
 
         $partidos = [
-            // Confirmados ya jugados
-            ['local' => 'Atletico Maestre', 'visitante' => 'Tigres', 'dias' => -10, 'arbitro' => 'arbitro2', 'resultado' => '2-1', 'estado' => 'confirmado'],
-            ['local' => 'Deportivo DAM', 'visitante' => 'Atletico Maestre', 'dias' => -5, 'arbitro' => 'arbitro1', 'resultado' => '1-1', 'estado' => 'confirmado'],
-
-            // En revision: ambos capitanes enviaron resultado distinto
+            // CASO A - Partido ya jugado, sin resultados de capitanes aun.
+            // Objetivo: que capitanprueba y capitantigres prueben el flujo desde cero.
             [
                 'local' => 'Atletico Maestre',
                 'visitante' => 'Tigres',
+                'dias' => -3,
+                'arbitro' => 'arbitro1',
+                'resultado' => null,
+                'estado' => 'pendiente',
+            ],
+
+            // CASO B - Solo envio local, pendiente de visitante.
+            [
+                'local' => 'Tigres',
+                'visitante' => 'Atletico Maestre',
                 'dias' => -2,
                 'arbitro' => 'arbitro2',
+                'resultado' => null,
+                'estado' => 'pendiente',
+                'resultado_capitan_local' => '2-1',
+            ],
+
+            // CASO C - Confirmado por coincidencia de capitanes.
+            [
+                'local' => 'Atletico Maestre',
+                'visitante' => 'Tigres',
+                'dias' => -8,
+                'arbitro' => 'arbitro2',
+                'resultado' => '3-2',
+                'estado' => 'confirmado',
+                'resultado_capitan_local' => '3-2',
+                'resultado_capitan_visitante' => '3-2',
+            ],
+
+            // CASO D - En revision por discrepancia de capitanes.
+            [
+                'local' => 'Atletico Maestre',
+                'visitante' => 'Tigres',
+                'dias' => -6,
+                'arbitro' => 'arbitro1',
                 'resultado' => null,
                 'estado' => 'en_revision',
                 'resultado_capitan_local' => '1-0',
                 'resultado_capitan_visitante' => '0-1',
             ],
 
-            // Pendientes para ambos equipos
-            ['local' => 'Tigres', 'visitante' => 'Atletico Maestre', 'dias' => 2, 'arbitro' => 'arbitro1', 'resultado' => null, 'estado' => 'pendiente'],
-            ['local' => 'Atletico Maestre', 'visitante' => 'Deportivo DAM', 'dias' => 4, 'arbitro' => 'arbitro2', 'resultado' => null, 'estado' => 'pendiente'],
-            ['local' => 'Tigres', 'visitante' => 'Deportivo DAM', 'dias' => 6, 'arbitro' => null, 'resultado' => null, 'estado' => 'pendiente'],
+            // CASO E - Segundo caso en revision para panel admin.
+            [
+                'local' => 'Tigres',
+                'visitante' => 'Atletico Maestre',
+                'dias' => -5,
+                'arbitro' => 'arbitro2',
+                'resultado' => null,
+                'estado' => 'en_revision',
+                'resultado_capitan_local' => '2-2',
+                'resultado_capitan_visitante' => '1-1',
+            ],
+
+            // CASO F - Partido futuro pendiente (no debe permitir envio).
+            [
+                'local' => 'Atletico Maestre',
+                'visitante' => 'Tigres',
+                'dias' => 2,
+                'arbitro' => 'arbitro1',
+                'resultado' => null,
+                'estado' => 'pendiente',
+            ],
+
+            // Partidos adicionales para otros paneles.
+            [
+                'local' => 'Atletico Maestre',
+                'visitante' => 'Deportivo DAM',
+                'dias' => 4,
+                'arbitro' => 'arbitro2',
+                'resultado' => null,
+                'estado' => 'pendiente',
+            ],
+            [
+                'local' => 'Tigres',
+                'visitante' => 'Deportivo DAM',
+                'dias' => 6,
+                'arbitro' => null,
+                'resultado' => null,
+                'estado' => 'pendiente',
+            ],
         ];
 
         foreach ($partidos as $partido) {
