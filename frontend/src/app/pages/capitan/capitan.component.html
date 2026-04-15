@@ -7,12 +7,12 @@
 <div *ngFor="let p of partidos" class="mb-3 border p-3 rounded">
 
   <p>
-    {{ p.equipoLocal }} vs {{ p.equipoVisitante }} —
-    <strong>Estado:</strong> {{ p.estado }}
+    {{ p.clubLocal?.nombre || 'Local' }} vs {{ p.clubVisitante?.nombre || 'Visitante' }} —
+    <strong>Estado:</strong> {{ getEstadoPartido(p) }}
   </p>
 
   <!-- SOLO si el partido ya ha pasado y está pendiente -->
-  <div *ngIf="p.estado === 'pendiente' && partidoFinalizado(p)">
+  <div *ngIf="getEstadoPartido(p) === 'pendiente' && partidoFinalizado(p)">
 
     <input
       class="form-control mb-2"
@@ -27,11 +27,11 @@
 
   </div>
 
-  <div *ngIf="p.estado === 'pendiente' && !partidoFinalizado(p)">
+  <div *ngIf="getEstadoPartido(p) === 'pendiente' && !partidoFinalizado(p)">
     <em>El partido aún no se ha jugado</em>
   </div>
 
-  <div *ngIf="p.estado !== 'pendiente'">
+  <div *ngIf="getEstadoPartido(p) !== 'pendiente'">
     <em>No se puede modificar este partido</em>
   </div>
 

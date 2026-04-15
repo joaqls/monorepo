@@ -18,6 +18,12 @@ export class CapitanComponent implements OnInit {
     private authService: AuthService
   ) {}
 
+  getEstadoPartido(partido: any): string {
+    return typeof partido?.estado === 'string'
+      ? partido.estado
+      : (partido?.resultado ? 'confirmado' : 'pendiente');
+  }
+
   ngOnInit(): void {
     const usuario = this.authService.getUsuario();
 
@@ -34,7 +40,7 @@ export class CapitanComponent implements OnInit {
 
   // Determina si este capitán es local o visitante en ESTE partido
   obtenerRolCapitan(partido: any): 'capitanLocal' | 'capitanVisitante' {
-    return partido.equipoLocal === this.equipo
+    return partido?.clubLocal?.nombre === this.equipo
       ? 'capitanLocal'
       : 'capitanVisitante';
   }
@@ -53,10 +59,11 @@ export class CapitanComponent implements OnInit {
     const rolCapitan = this.obtenerRolCapitan(partido);
 
     this.partidosService
-      .enviarResultado(partido._id, rolCapitan, this.resultado)
+      .enviarResultado(String(partido.id), rolCapitan, this.resultado)
       .subscribe(() => {
         alert('Resultado enviado');
         this.resultado = '';
+        this.ngOnInit();
       });
   }
 }

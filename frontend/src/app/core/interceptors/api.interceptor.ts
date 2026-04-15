@@ -33,11 +33,24 @@ export class ApiInterceptor implements HttpInterceptor {
     const requestUrl = this.resolveRequestUrl(req.url);
     const headers = this.buildHeaders(req.headers, req.body);
     const token = this.authService.getAccessToken() ?? this.getToken();
+    const rol = this.getRol();
+    const usuario = this.getUsuarioNombre();
+
+    const authHeaders: Record<string, string> = {};
+    if (token) {
+      authHeaders['Authorization'] = `Bearer ${token}`;
+    }
+    if (rol) {
+      authHeaders['rol'] = rol;
+    }
+    if (usuario) {
+      authHeaders['usuario'] = usuario;
+    }
 
     const request = req.clone({
       url: requestUrl,
       headers,
-      setHeaders: token ? { Authorization: `Bearer ${token}` } : {}
+      setHeaders: authHeaders
     });
 
     const request$ = next.handle(request);
@@ -56,7 +69,7 @@ export class ApiInterceptor implements HttpInterceptor {
           return this.handleUnauthorized(request, next, error);
         }
 
-        if (error.status === 401 || error.status === 403) {
+        if (error.status === 401) {
           this.forceLogout();
         }
 
@@ -189,6 +202,34 @@ export class ApiInterceptor implements HttpInterceptor {
 
       const parsed = JSON.parse(usuario);
       return parsed?.token ?? parsed?.access_token ?? parsed?.jwt ?? null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  private getRol(): string | null {
+    try {
+      const usuario = localStorage.getItem('usuario');
+      if (!usuario) {
+        return null;
+      }
+
+      const parsed = JSON.parse(usuario);
+      return typeof parsed?.rol === 'string' ? parsed.rol : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  private getUsuarioNombre(): string | null {
+    try {
+      const usuario = localStorage.getItem('usuario');
+      if (!usuario) {
+        return null;
+      }
+
+      const parsed = JSON.parse(usuario);
+      return typeof parsed?.usuario === 'string' ? parsed.usuario : null;
     } catch (e) {
       return null;
     }

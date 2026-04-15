@@ -30,6 +30,9 @@ Route::get('ligas/{liga}', [LigaController::class, 'show']);
 // ── Partidos (lectura pública) — rutas específicas ANTES de {partido} ─────────
 Route::get('partidos/arbitro/{arbitro}', [PartidoController::class, 'porArbitro']);
 Route::get('partidos/club/{club}',       [PartidoController::class, 'porClub']);
+Route::get('partidos/equipo/{equipo}',   [PartidoController::class, 'porEquipo']);
+Route::get('partidos/revision',          [PartidoController::class, 'enRevision']);
+Route::put('partidos/resultado/{partido}', [PartidoController::class, 'enviarResultado']);
 Route::get('partidos',                   [PartidoController::class, 'index']);
 Route::get('partidos/{partido}',         [PartidoController::class, 'show']);
 
@@ -51,6 +54,7 @@ Route::middleware('admin')->group(function () {
 
     // Partidos
     Route::post('partidos',             [PartidoController::class, 'store']);
+    Route::put('partidos/confirmar/{partido}', [PartidoController::class, 'confirmarResultado']);
     Route::put('partidos/{partido}',    [PartidoController::class, 'update']);
     Route::delete('partidos/{partido}', [PartidoController::class, 'destroy']);
 });

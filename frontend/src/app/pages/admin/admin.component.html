@@ -5,12 +5,26 @@
 <h2>Crear partido</h2>
 
 <div class="mb-3">
-  <input class="form-control mb-2" placeholder="Equipo local" [(ngModel)]="equipoLocal">
-  <input class="form-control mb-2" placeholder="Equipo visitante" [(ngModel)]="equipoVisitante">
-  <input class="form-control mb-2" placeholder="Deporte" [(ngModel)]="deporte">
+  <select class="form-select mb-2" [(ngModel)]="ligaId">
+    <option [ngValue]="null">Selecciona liga</option>
+    <option *ngFor="let l of ligas" [ngValue]="l.id">
+      {{ l.nombre }} ({{ l.temporada }})
+    </option>
+  </select>
+
+  <select class="form-select mb-2" [(ngModel)]="clubLocalId">
+    <option [ngValue]="null">Selecciona club local</option>
+    <option *ngFor="let c of clubs" [ngValue]="c.id">{{ c.nombre }}</option>
+  </select>
+
+  <select class="form-select mb-2" [(ngModel)]="clubVisitanteId">
+    <option [ngValue]="null">Selecciona club visitante</option>
+    <option *ngFor="let c of clubs" [ngValue]="c.id">{{ c.nombre }}</option>
+  </select>
+
   <input class="form-control mb-2" type="date" [(ngModel)]="fecha">
-  <input class="form-control mb-2" placeholder="Árbitro" [(ngModel)]="arbitro">
-  <input class="form-control mb-2" placeholder="Ubicación" [(ngModel)]="ubicacion">
+  <input class="form-control mb-2" placeholder="Árbitro (opcional)" [(ngModel)]="arbitro">
+  <input class="form-control mb-2" placeholder="Resultado (opcional, ej: 1-0)" [(ngModel)]="resultado">
 
   <button class="btn btn-success" (click)="crearPartido()">
     Crear partido
@@ -22,9 +36,9 @@
 <h2>Todos los partidos</h2>
 
 <div *ngFor="let p of partidos" class="mb-2">
-  {{ p.equipoLocal }} vs {{ p.equipoVisitante }} —
+  {{ p.clubLocal?.nombre || p.club_local_id }} vs {{ p.clubVisitante?.nombre || p.club_visitante_id }} —
   {{ p.fecha | date:'dd/MM/yyyy' }} —
-  <strong>{{ p.estado }}</strong>
+  <strong>{{ p.resultado || (p.estado === 'en_revision' ? 'En revisión' : 'Pendiente') }}</strong>
 </div>
 
 <hr>
@@ -33,25 +47,7 @@
 
 <div *ngFor="let p of partidosRevision" class="border p-2 mb-3">
   <p>
-    {{ p.equipoLocal }} vs {{ p.equipoVisitante }} <br>
-    Capitanes:
-    {{ p.resultadoCapitanLocal }} /
-    {{ p.resultadoCapitanVisitante }}
+    {{ p.clubLocal?.nombre || p.club_local_id }} vs {{ p.clubVisitante?.nombre || p.club_visitante_id }} <br>
+    Fecha: {{ p.fecha | date:'dd/MM/yyyy' }}
   </p>
-
-  <input
-    class="form-control mb-2"
-    type="number"
-    placeholder="Resultado local"
-    [(ngModel)]="resLocal">
-
-  <input
-    class="form-control mb-2"
-    type="number"
-    placeholder="Resultado visitante"
-    [(ngModel)]="resVisitante">
-
-  <button class="btn btn-primary" (click)="confirmar(p)">
-    Confirmar resultado
-  </button>
 </div>

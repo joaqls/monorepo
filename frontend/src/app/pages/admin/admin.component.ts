@@ -9,26 +9,25 @@ import { PartidosService } from '../../services/partidos.service';
 export class AdminComponent implements OnInit {
 
   // Formulario crear partido
-  equipoLocal = '';
-  equipoVisitante = '';
-  deporte = '';
+  ligaId: number | null = null;
+  clubLocalId: number | null = null;
+  clubVisitanteId: number | null = null;
   fecha = '';
   arbitro = '';
-  ubicacion = '';
+  resultado = '';
 
   // Listados
+  ligas: any[] = [];
+  clubs: any[] = [];
   partidos: any[] = [];
   partidosRevision: any[] = [];
-
-  // Confirmación admin
-  resLocal = 0;
-  resVisitante = 0;
 
   constructor(private partidosService: PartidosService) {}
 
   ngOnInit(): void {
+    this.cargarLigas();
+    this.cargarClubs();
     this.cargarPartidos();
-    this.cargarPartidosRevision();
   }
 
   // ======================
@@ -36,69 +35,77 @@ export class AdminComponent implements OnInit {
   // ======================
   crearPartido() {
     if (
-      !this.equipoLocal ||
-      !this.equipoVisitante ||
-      !this.deporte ||
-      !this.fecha ||
-      !this.arbitro ||
-      !this.ubicacion
+      !this.ligaId ||
+      !this.clubLocalId ||
+      !this.clubVisitanteId ||
+      !this.fecha
     ) {
       alert('Completa todos los campos');
       return;
     }
 
+    if (this.clubLocalId === this.clubVisitanteId) {
+      alert('El club local y el visitante deben ser distintos');
+      return;
+    }
+
     const partido = {
-      equipoLocal: this.equipoLocal,
-      equipoVisitante: this.equipoVisitante,
-      deporte: this.deporte,
+      liga_id: this.ligaId,
+      club_local_id: this.clubLocalId,
+      club_visitante_id: this.clubVisitanteId,
       fecha: this.fecha,
-      arbitro: this.arbitro,
-      ubicacion: this.ubicacion
+      arbitro: this.arbitro || null,
+      resultado: this.resultado || null,
     };
 
-    this.partidosService.crearPartido(partido).subscribe(() => {
-      alert('Partido creado');
-      this.limpiarFormulario();
-      this.cargarPartidos();
+    this.partidosService.crearPartido(partido).subscribe({
+      next: () => {
+        alert('Partido creado');
+        this.limpiarFormulario();
+        this.cargarPartidos();
+      },
+      error: (err: Error) => {
+        alert(err.message || 'No se pudo crear el partido');
+      }
     });
   }
 
   limpiarFormulario() {
-    this.equipoLocal = '';
-    this.equipoVisitante = '';
-    this.deporte = '';
+    this.ligaId = null;
+    this.clubLocalId = null;
+    this.clubVisitanteId = null;
     this.fecha = '';
     this.arbitro = '';
-    this.ubicacion = '';
+    this.resultado = '';
   }
 
   // ======================
   // LISTADOS
   // ======================
   cargarPartidos() {
-    this.partidosService.obtenerPartidos().subscribe(data => {
-      this.partidos = data;
+    this.partidosService.obtenerPartidos().subscribe({
+      next: (data) => {
+        this.partidos = data;
+        this.partidosRevision = data.filter((p: any) => p?.estado === 'en_revision');
+      },
+      error: () => {
+        this.partidos = [];
+        this.partidosRevision = [];
+      }
     });
   }
 
-  cargarPartidosRevision() {
-    this.partidosService.obtenerPartidosEnRevision().subscribe(data => {
-      this.partidosRevision = data;
+  cargarLigas() {
+    this.partidosService.obtenerLigas().subscribe({
+      next: (data) => this.ligas = data,
+      error: () => this.ligas = []
     });
   }
 
-  // ======================
-  // CONFIRMAR RESULTADO
-  // ======================
-  confirmar(partido: any) {
-    this.partidosService
-      .confirmarResultado(partido._id, this.resLocal, this.resVisitante)
-      .subscribe(() => {
-        alert('Resultado confirmado por administrador');
-        this.resLocal = 0;
-        this.resVisitante = 0;
-        this.cargarPartidos();
-        this.cargarPartidosRevision();
-      });
+  cargarClubs() {
+    this.partidosService.obtenerClubs().subscribe({
+      next: (data) => this.clubs = data,
+      error: () => this.clubs = []
+    });
   }
 }

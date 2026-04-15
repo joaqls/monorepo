@@ -16,6 +16,10 @@ class Partido extends Model
         'fecha',
         'resultado',
         'arbitro',
+        'ubicacion',
+        'resultado_capitan_local',
+        'resultado_capitan_visitante',
+        'estado',
     ];
 
     public function liga()

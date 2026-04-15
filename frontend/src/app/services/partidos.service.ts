@@ -28,6 +28,20 @@ export class PartidosService {
     );
   }
 
+  obtenerLigas(): Observable<any[]> {
+    return this.http.get<any[]>('/ligas').pipe(
+      map((res) => this.validateArrayPayload(res, 'ligas')),
+      catchError((error) => this.handleHttpError(error, 'No se pudieron cargar las ligas'))
+    );
+  }
+
+  obtenerClubs(): Observable<any[]> {
+    return this.http.get<any[]>('/clubs').pipe(
+      map((res) => this.validateArrayPayload(res, 'clubs')),
+      catchError((error) => this.handleHttpError(error, 'No se pudieron cargar los clubs'))
+    );
+  }
+
   // ADMIN — partidos en revisión
   obtenerPartidosEnRevision(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/revision`).pipe(
