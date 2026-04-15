@@ -63,6 +63,36 @@ export class CapitanComponent implements OnInit {
     return new Date(partido.fecha) <= new Date();
   }
 
+  puedeEnviarResultado(partido: any): boolean {
+    if (!this.partidoFinalizado(partido)) {
+      return false;
+    }
+
+    const estado = this.getEstadoPartido(partido);
+    if (estado === 'en_revision') {
+      return false;
+    }
+
+    const rolCapitan = this.obtenerRolCapitan(partido);
+    if (rolCapitan === 'capitanLocal') {
+      return !partido?.resultado_capitan_local;
+    }
+
+    return !partido?.resultado_capitan_visitante;
+  }
+
+  mensajeEstado(partido: any): string {
+    if (!this.partidoFinalizado(partido)) {
+      return 'El partido aun no se ha jugado';
+    }
+
+    if (this.getEstadoPartido(partido) === 'en_revision') {
+      return 'Partido en revision por discrepancia de capitanes';
+    }
+
+    return 'No se puede modificar este partido';
+  }
+
   enviarResultado(partido: any) {
     const id = Number(partido?.id);
     if (!id) {

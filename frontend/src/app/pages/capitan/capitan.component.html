@@ -12,8 +12,7 @@
     <strong>Estado:</strong> {{ getEstadoPartido(p) }}
   </p>
 
-  <!-- SOLO si el partido ya ha pasado y está pendiente -->
-  <div *ngIf="getEstadoPartido(p) === 'pendiente' && partidoFinalizado(p)">
+  <div *ngIf="puedeEnviarResultado(p)">
 
     <input
       class="form-control mb-2"
@@ -28,12 +27,8 @@
 
   </div>
 
-  <div *ngIf="getEstadoPartido(p) === 'pendiente' && !partidoFinalizado(p)">
-    <em>El partido aún no se ha jugado</em>
-  </div>
-
-  <div *ngIf="getEstadoPartido(p) !== 'pendiente'">
-    <em>No se puede modificar este partido</em>
+  <div *ngIf="!puedeEnviarResultado(p)">
+    <em>{{ mensajeEstado(p) }}</em>
   </div>
 
 </div>

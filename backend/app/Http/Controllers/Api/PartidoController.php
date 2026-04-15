@@ -112,7 +112,15 @@ class PartidoController extends Controller
             return response()->json(['message' => 'El partido aún no se ha jugado'], 422);
         }
 
-        if ($partido->estado === 'confirmado') {
+        if ($partido->estado === 'en_revision') {
+            return response()->json(['message' => 'El partido está en revisión por administrador'], 422);
+        }
+
+        if (
+            $partido->estado === 'confirmado'
+            && $partido->resultado_capitan_local
+            && $partido->resultado_capitan_visitante
+        ) {
             return response()->json(['message' => 'El partido ya está confirmado'], 422);
         }
 
@@ -140,6 +148,8 @@ class PartidoController extends Controller
                 $partido->estado = 'en_revision';
             }
         } else {
+            // Hasta que los dos capitanes envien, no hay marcador definitivo.
+            $partido->resultado = null;
             $partido->estado = 'pendiente';
         }
 
